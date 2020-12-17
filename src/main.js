@@ -3,6 +3,15 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+//antd组件
+import antd from "@/utils/antd";
+Vue.use(antd)
+
+import '@/style/fonts.scss'
+
+//axios
+import './utils/http'
+
 Vue.config.productionTip = false
 
 new Vue({
