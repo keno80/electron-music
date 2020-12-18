@@ -19,6 +19,7 @@ async function createWindow() {
 		minWidth: 1022,
 		minHeight: 670,
 		frame: false,
+		resizable: false,
 		webPreferences: {
 			// Use pluginOptions.nodeIntegration, leave this alone
 			// See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -44,13 +45,13 @@ async function createWindow() {
 	})
 
 	//窗口最大化、恢复
-	ipcMain.on('window-max', () => {
-		if (win.isMaximized()) {
-			win.restore()
-		} else {
-			win.maximize()
-		}
-	})
+	// ipcMain.on('window-max', () => {
+	// 	if (win.isMaximized()) {
+	// 		win.restore()
+	// 	} else {
+	// 		win.maximize()
+	// 	}
+	// })
 
 	//窗口关闭
 	ipcMain.on('window-close', () => {

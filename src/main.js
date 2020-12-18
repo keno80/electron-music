@@ -7,6 +7,10 @@ import store from './store'
 import antd from "@/utils/antd";
 Vue.use(antd)
 
+//element组件
+import element from '@/utils/element'
+Vue.use(element)
+
 import '@/style/fonts.scss'
 
 //axios

@@ -10,6 +10,13 @@ module.exports = {
 				"libraryDirectory": "lib",
 				"style": "css"
 			}
+		],
+		[
+			"component",
+			{
+				"libraryName": "element-ui",
+				"styleLibraryName": "theme-chalk"
+			}
 		]
 	]
 }

@@ -2,7 +2,7 @@
   <div class="tab">
     <a-tabs default-active-key="1" @change="callback">
       <a-tab-pane key="1" tab="个性推荐">
-        <tab1-recommend :recommend="recommend" v-if="recommendData"/>
+        <tab1-recommend />
       </a-tab-pane>
       <a-tab-pane key="2" tab="歌单">
         Content of Tab Pane 2
@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import api from './api'
 import {Tab1Recommend} from "@/views/Discover/components";
 
 export default {
@@ -32,25 +31,7 @@ export default {
   components: {
     Tab1Recommend
   },
-  data() {
-    return {
-      recommendData: false,
-      recommend: []
-    }
-  },
-  mounted() {
-    this.fetchData()
-  },
   methods: {
-    fetchData() {
-      api.discovery().then(res => {
-        if (res.data.code === 200) {
-          console.log(res);
-          this.recommend = res.data.data.blocks
-          this.recommendData = true
-        }
-      })
-    },
     callback() {
 
     }

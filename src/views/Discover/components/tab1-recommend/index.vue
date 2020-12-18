@@ -1,62 +1,67 @@
 <template>
-  <div class="carousel_content">
-    <a-carousel dot-position="bottom" autoplay>
-      <div v-for="(img, index) in imgList" :key="index" class="imgStyle">
-        <img :src="img">
-      </div>
-    </a-carousel>
+  <div>
+    <carousel :recommend="recommendBanner" v-if="bannerReady"/>
+    <song-list :songList="songList" v-if="songListReady"/>
+    <new-song :newSong="newSong" v-if="newSongReady"/>
   </div>
 </template>
 
 <script>
+import Carousel from './Carousel'
+import SongList from './SongList'
+import NewSong from './NewSong'
+import api from "@/views/Discover/api";
+
 export default {
   name: "index",
-  props: {
-    recommend: {
-      type: Array
+  components: {
+    Carousel,
+    SongList,
+    NewSong
+  },
+  data() {
+    return {
+      bannerReady: false,
+      recommendBanner: [],
+      songListReady: false,
+      songList: [],
+      newSongReady: false,
+      newSong: []
     }
   },
-  computed: {
-    imgList() {
-      let list = []
-      for (let i = 0; i < this.recommend[0].extInfo.banners.length; i++) {
-        list.push(this.recommend[0].extInfo.banners[i].pic)
-      }
-      return list
-    },
+  mounted() {
+    this.fetchData()
   },
   methods: {
-    getImgUrl(i) {
-      const image = this.imgList
-      return image[i]
-    }
+    fetchData() {
+      api.discovery().then(res => {
+        if (res.data.code === 200) {
+          // console.log(res);
+          this.recommendBanner = res.data.data.blocks
+          this.bannerReady = true
+        }
+      })
+
+      api.recommendSongList().then(res => {
+        if (res.data.code === 200) {
+          // console.log(res);
+          this.songList = res.data.result
+          this.songListReady = true
+        }
+      })
+
+      api.recommendNewSong().then(res => {
+        if (res.data.code === 200) {
+          console.log(res);
+          this.newSong = res.data.result
+          this.newSongReady = true
+        }
+      })
+    },
   }
 }
 </script>
 
-<style scoped lang="scss">
-.carousel_content {
-  height: 230px;
-
-  /deep/.ant-carousel {
-    .slick-slide {
-      height: 230px;
-      line-height: 160px;
-      background: #364d79;
-    }
-
-    .slick-list {
-      border-radius: 10px;
-    }
-
-    .imgStyle {
-
-      img {
-        width: 100%;
-        height: 230px;
-      }
-    }
-  }
-}
+<style scoped>
 
 </style>
