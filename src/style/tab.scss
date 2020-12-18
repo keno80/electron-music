@@ -1,0 +1,32 @@
+.tab {
+  /deep/.ant-tabs-line {
+    .ant-tabs-top-bar {
+      .ant-tabs-nav-container {
+        .ant-tabs-nav-wrap {
+          .ant-tabs-nav-scroll {
+            .ant-tabs-nav {
+              .ant-tabs-tab {
+                margin: 0 10px 0 0;
+
+                &:hover {
+                  color: #ec4141;
+                }
+              }
+
+              .ant-tabs-tab-active {
+                color: #ec4141;
+                font-size: 18px;
+                font-weight: bold;
+              }
+
+              .ant-tabs-ink-bar {
+                background-color: #ec4141;
+                width: 102px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

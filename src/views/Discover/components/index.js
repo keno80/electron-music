@@ -1,0 +1,1 @@
+export {default as Tab1Recommend} from './tab1-recommend'
