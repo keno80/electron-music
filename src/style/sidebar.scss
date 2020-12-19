@@ -1,8 +1,7 @@
 .sider-layout {
-  min-height: calc(100vh - 62px);
 
   .ant-layout-sider {
-    border-right: 1px solid rgba(236, 65, 65, .5);
+    border-right: 1px solid rgba(236, 65, 65, 0.5);
 
     .ant-layout-sider-children {
       .ant-menu-inline {

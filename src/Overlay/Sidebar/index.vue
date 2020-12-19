@@ -14,22 +14,20 @@
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
-    <app-main/>
   </a-layout>
 </template>
 
 <script>
-import AppMain from "@/Overlay/AppMain";
 import AppLink from '@/Overlay/Sidebar/Link'
+import MusicPlayer from '@/Overlay/PlayerWidget'
 import {isExternal} from "@/utils/validate";
 import path from "path";
-import {mapGetters} from 'vuex'
 
 export default {
   name: "index",
   components: {
-    AppMain,
-    AppLink
+    AppLink,
+    MusicPlayer
   },
   computed: {
     routes() {

@@ -5,21 +5,30 @@
     </div>
     <div class="songs_content">
       <div class="blocks" v-for="(item, index) in newSong" :key="index">
-        <img :src="item.picUrl">
+        <a @click="getMusic(item.id)">
+          <img :src="item.picUrl">
+          <div class="play_icon">
+            <a-icon type="caret-right" class="play_icon_style"/>
+          </div>
+        </a>
+
         <div class="name_content">
           <p class="name_format song_name">{{ item.name }}</p>
-<!--          <p class="name_format artists_name">{{ getArtists(item) }}</p>-->
           <p class="name_format artists_name" v-for="(info, index) in item.song.artists" :key="index">
-            <a>{{ info.name }}</a>
-            <span v-if="item.song.artists.length > 1 && index !== item.song.artists.length">/</span>
+            <a class="artists_name" @click="toArtistPage(info.id)">{{ info.name }}</a>
+            <span v-if="item.song.artists.length > 1 && index !== item.song.artists.length - 1">/</span>
           </p>
         </div>
       </div>
     </div>
+
+    <audio :src="songUrl" autoplay/>
   </div>
 </template>
 
 <script>
+import global_api from "@/utils/global_api";
+
 export default {
   name: "index",
   props: {
@@ -27,13 +36,25 @@ export default {
       type: Array
     }
   },
+  data() {
+    return {
+      songUrl: ''
+    }
+  },
   methods: {
-    getArtists(item) {
-      let l = []
-      for (let i = 0; i < item.song.artists.length; i++) {
-        l.push(item.song.artists[i].name);
-      }
-      return l.join('/')
+    getMusic(id) {
+      global_api.checkMusicAvailable(id).then(res => {
+        if (res.data.success === true) {
+          global_api.getMusicUrl(id).then(res => {
+            if (res.data.code === 200) {
+              this.songUrl = res.data.data[0].url
+            }
+          })
+        }
+      })
+    },
+    toArtistPage(id) {
+      console.log(id);
     }
   }
 }
@@ -53,10 +74,27 @@ export default {
       width: 250px;
       height: 50px;
       margin-bottom: 14px;
+      position: relative;
 
       &:hover {
         background-color: rgba(145, 145, 145, 0.2);
         border-radius: 6px;
+      }
+
+      .play_icon {
+        position: absolute;
+        width: 49px;
+        top: 50%;
+        margin-top: -13px;
+        text-align: center;
+
+        .play_icon_style {
+          font-size: 16px;
+          color: #ec4141;
+          padding: 4px 4px 4px 6px;
+          background-color: rgba(255, 255, 255, .8);
+          border-radius: 15px;
+        }
       }
 
       img {
