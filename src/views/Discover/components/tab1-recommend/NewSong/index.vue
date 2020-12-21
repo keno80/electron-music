@@ -5,7 +5,7 @@
     </div>
     <div class="songs_content">
       <div class="blocks" v-for="(item, index) in newSong" :key="index">
-        <a @click="getMusic(item.id)">
+        <a @click="getMusic(item)">
           <img :src="item.picUrl">
           <div class="play_icon">
             <a-icon type="caret-right" class="play_icon_style"/>
@@ -21,8 +21,6 @@
         </div>
       </div>
     </div>
-
-    <audio :src="songUrl" autoplay/>
   </div>
 </template>
 
@@ -36,20 +34,16 @@ export default {
       type: Array
     }
   },
-  data() {
-    return {
-      songUrl: ''
-    }
-  },
   methods: {
-    getMusic(id) {
-      global_api.checkMusicAvailable(id).then(res => {
+    getMusic(item) {
+      global_api.checkMusicAvailable(item.id).then(res => {
         if (res.data.success === true) {
-          global_api.getMusicUrl(id).then(res => {
-            if (res.data.code === 200) {
-              this.songUrl = res.data.data[0].url
-            }
-          })
+          this.$store.dispatch('songs/nowPlayMusic', item)
+          // global_api.getMusicUrl(item.id).then(res => {
+          //   if (res.data.code === 200) {
+          //     this.songUrl = res.data.data[0].url
+          //   }
+          // })
         }
       })
     },

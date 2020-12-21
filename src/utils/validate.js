@@ -27,3 +27,12 @@ export function validUsername(str) {
 export function validArray(array) {
   return array.length > 0
 }
+
+/**
+ * @param {Object} obj
+ * @returns {Boolean}
+ * **/
+
+export function validObject(obj) {
+  return Object.keys(obj).length > 0
+}
