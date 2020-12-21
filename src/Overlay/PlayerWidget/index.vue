@@ -1,5 +1,5 @@
 <template>
-  <a-layout-footer>
+  <a-layout-footer style="z-index: 1001">
     <div class="player_content">
       <div class="song_info" v-if="haveSongInfo">
         <a-avatar shape="square" :size="50" icon="smile"/>
@@ -65,7 +65,9 @@ export default {
   name: "index",
   computed: {
     ...mapGetters([
-      'nowPlayMusic'
+      'nowPlayMusic',
+      'listStatus',
+      'list'
     ]),
     haveSongInfo() {
       return !validObject(this.nowPlayMusic)
@@ -74,7 +76,7 @@ export default {
   watch: {
     '$store.state.songs.nowPlayMusic': function (newVal) {
       console.log(newVal);
-      this.getMusic(newVal.id)
+      this.getMusic(newVal)
     }
   },
   data() {
@@ -89,8 +91,9 @@ export default {
   },
   methods: {
     //获取音乐地址
-    getMusic(id) {
-      global_api.getMusicUrl(id).then(res => {
+    getMusic(info) {
+      this.$store.dispatch('songs/addPlayListMusic', info)
+      global_api.getMusicUrl(info.id).then(res => {
         console.log(res);
         if (res.data.code === 200) {
           this.songUrl = res.data.data[0].url
@@ -117,12 +120,15 @@ export default {
     //播放，暂停
     play() {
       let audio = this.$refs.audio
-      if (this.playing) {
-        this.playing = false
-        audio.pause()
-      } else {
-        this.playing = true
-        audio.play()
+      //播放前先检查播放列表有无音乐
+      if (this.list.length !== 0) {
+        if (this.playing) {
+          this.playing = false
+          audio.pause()
+        } else {
+          this.playing = true
+          audio.play()
+        }
       }
     },
     //拖动进度条改变播放进度
@@ -139,7 +145,7 @@ export default {
     },
     //显示播放列表
     showMusicList() {
-
+      this.listStatus ? this.$store.dispatch('songs/closeMusicList') : this.$store.dispatch('songs/openMusicList')
     },
     toArtistPage(id) {
 
