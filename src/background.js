@@ -16,10 +16,11 @@ async function createWindow() {
 	Menu.setApplicationMenu(null)
 
 	const win = new BrowserWindow({
+		maxWidth: 1022,
+		maxHeight: 670,
 		minWidth: 1022,
 		minHeight: 670,
 		frame: false,
-		resizable: false,
 		webPreferences: {
 			// Use pluginOptions.nodeIntegration, leave this alone
 			// See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -28,6 +29,9 @@ async function createWindow() {
 			// nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
 		}
 	})
+
+	//开发环境打开控制台
+	win.webContents.openDevTools()
 
 	if (process.env.WEBPACK_DEV_SERVER_URL) {
 		// Load the url of the dev server if in development mode

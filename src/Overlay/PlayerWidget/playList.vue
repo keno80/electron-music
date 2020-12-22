@@ -102,6 +102,8 @@ export default {
 
 <style scoped lang="scss">
 .play_list_content {
+  width: 420px;
+
   .pl_title {
     display: flex;
     align-items: center;
