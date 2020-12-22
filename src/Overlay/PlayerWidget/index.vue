@@ -23,10 +23,10 @@
       </div>
       <div class="controller">
         <div class="play_widget">
-          <a-icon type="step-backward" style="font-size: 20px"/>
+          <a-icon type="step-backward" class="pre_icon" @click="previousAndNext('pre')"/>
           <a-icon type="pause" style="font-size: 20px" class="play_style" @click="play" v-if="playStatus"/>
           <a-icon type="caret-right" style="font-size: 20px" class="play_style" @click="play" v-else/>
-          <a-icon type="step-forward" style="font-size: 20px"/>
+          <a-icon type="step-forward" class="next_icon" @click="previousAndNext('next')"/>
         </div>
         <div class="progress_bar">
           <a-row>
@@ -44,7 +44,7 @@
       </div>
       <div class="tool_block">
         <a-icon type="sound" style="font-size: 22px"/>
-        <a-slider :default-value="volumeVal" :tipFormatter="null" @change="setVolume"/>
+        <a-slider :default-value="volumeVal" @change="setVolume"/>
         <a style="color: #3e3e3e;margin-top: 3px" @click="showMusicList">
           <a-icon type="bars" style="font-size: 22px"/>
         </a>
@@ -91,7 +91,7 @@ export default {
     //用于播放列表双击事件
     '$store.state.songs.playStatus': function (newVal) {
       let audio = this.$refs.audio
-      if (newVal === true) {
+      if (newVal === true && this.songUrl !== '') {
         audio.play()
       }
     }
@@ -154,6 +154,26 @@ export default {
           this.$store.dispatch('songs/refreshPlayStatus', true)
           audio.play()
         }
+      }
+    },
+    //上一曲 - pre  下一曲 - next
+    previousAndNext(type) {
+      //先判断当前播放列表是否只有一首歌曲，如只有一首，则不执行操作
+      if (this.list.length > 1) {
+        //如不止一首，则先获取该首歌曲在播放列表中的index
+        let index = 0
+        for (let i = 0; i < this.list.length; i++) {
+          if (this.list[i].id === this.nowPlayMusic.id) {
+            index = i
+          }
+        }
+        console.log(index);
+        if (type === 'pre') {
+          index - 1 >= 0 ? index-- : index = this.list.length - 1
+        } else if (type === 'next') {
+          index + 1 >= this.list.length ? index = 0 : index++
+        }
+        this.$store.dispatch('songs/nowPlayMusic', this.list[index])
       }
     },
     //拖动进度条改变播放进度
@@ -224,11 +244,31 @@ export default {
     padding: 0 10px;
 
     .play_widget {
+      .pre_icon {
+        font-size: 20px;
+
+        &:hover {
+          color: rgb(237, 101, 102);
+        }
+      }
+
+      .next_icon {
+        font-size: 20px;
+
+        &:hover {
+          color: rgb(237, 101, 102);
+        }
+      }
+
       .play_style {
         background: #eee;
         border-radius: 18px;
         padding: 7px;
         margin: 0 30px;
+
+        &:hover {
+          background: #e0e0e0;
+        }
       }
     }
 

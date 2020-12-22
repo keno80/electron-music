@@ -17,9 +17,15 @@
       </div>
     </div>
     <div class="pl_list">
-      <a-list bordered :data-source="list">
+      <a-empty
+        image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+        :image-style="{height: '60px'}" v-if="list.length >= 0">
+        <span slot="description">播放列表还没有音乐哦~</span>
+      </a-empty>
+      <a-list bordered :data-source="list" v-else>
         <a-list-item slot="renderItem" slot-scope="item, index">
-          <div class="music_content" :class="[nowPlayId === item.id ? active : '']" @dblclick="playListDoubleClick(item, index)">
+          <div class="music_content" :class="[nowPlayId === item.id ? active : '']"
+               @dblclick="playListDoubleClick(item, index)">
             <div class="name_content">
               <template v-if="nowPlayId === item.id">
                 <a-icon type="caret-right" v-if="playStatus && nowPlayId === item.id"/>
@@ -120,6 +126,10 @@ export default {
   }
 
   .pl_list {
+    .ant-empty {
+      margin: 130px 8px 0 8px;
+    }
+
     .ant-list-bordered {
       border-top: 1px solid #d9d9d9;
       border-top: 1px solid #d9d9d9;
@@ -173,7 +183,7 @@ export default {
           color: #ec4141;
 
           a {
-            color: #ec4141!important;
+            color: #ec4141 !important;
           }
         }
       }
