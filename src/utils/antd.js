@@ -1,4 +1,22 @@
-import {Affix, Avatar, Button, Col, Divider, Drawer, Dropdown, Empty, Icon, Input, Layout, List, Menu, Row, Slider, Tabs} from "ant-design-vue";
+import {
+	Affix,
+	Avatar,
+	Button,
+	Col,
+	Divider,
+	Drawer,
+	Dropdown,
+	Empty,
+	Icon,
+	Input,
+	Layout,
+	List,
+	Menu,
+	Row,
+	Slider,
+	Spin,
+	Tabs
+} from "ant-design-vue";
 
 const antd = {
 	install: (vue => {
@@ -17,6 +35,7 @@ const antd = {
 		vue.use(Menu)
 		vue.use(Row)
 		vue.use(Slider)
+		vue.use(Spin)
 		vue.use(Tabs)
 	})
 }

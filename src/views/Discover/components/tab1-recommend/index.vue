@@ -1,8 +1,25 @@
 <template>
   <div>
-    <carousel :recommend="recommendBanner" v-if="bannerReady"/>
-    <song-list :songList="songList" v-if="songListReady"/>
-    <new-song :newSong="newSong" v-if="newSongReady"/>
+    <div class="carousel_spin common_style" v-if="!bannerReady">
+      <a-spin tip="Banner加载中...">
+        <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true" />
+      </a-spin>
+    </div>
+    <carousel :recommend="recommendBanner" v-else/>
+
+    <div class="song_list_spin common_style" v-if="!songListReady">
+      <a-spin tip="推荐歌单加载中...">
+        <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true" />
+      </a-spin>
+    </div>
+    <song-list :songList="songList" v-else/>
+
+    <div class="new_song_spin common_style" v-if="!newSongReady">
+      <a-spin tip="推荐新歌加载中...">
+        <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true" />
+      </a-spin>
+    </div>
+    <new-song :newSong="newSong" v-else/>
   </div>
 </template>
 
@@ -62,6 +79,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.carousel_spin {
+  height: 232px;
+}
 
+.song_list_spin {
+  height: 446px;
+}
+
+.new_song_spin {
+  height: 298px;
+}
+
+.common_style {
+  width: 774px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
