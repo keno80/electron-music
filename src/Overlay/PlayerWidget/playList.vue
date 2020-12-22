@@ -19,7 +19,7 @@
     <div class="pl_list">
       <a-empty
         image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
-        :image-style="{height: '60px'}" v-if="list.length >= 0">
+        :image-style="{height: '60px'}" v-if="list.length <= 0">
         <span slot="description">播放列表还没有音乐哦~</span>
       </a-empty>
       <a-list bordered :data-source="list" v-else>
