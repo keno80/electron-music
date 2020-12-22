@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+
 import global_api from "@/utils/global_api";
 
 export default {
@@ -34,19 +36,20 @@ export default {
       type: Array
     }
   },
+  computed: {
+    ...mapGetters([
+      'list'
+    ])
+  },
   methods: {
     getMusic(item) {
       global_api.checkMusicAvailable(item.id).then(res => {
         if (res.data.success === true) {
           this.$store.dispatch('songs/nowPlayMusic', item)
-          // global_api.getMusicUrl(item.id).then(res => {
-          //   if (res.data.code === 200) {
-          //     this.songUrl = res.data.data[0].url
-          //   }
-          // })
         }
       })
     },
+    //去歌手详情页
     toArtistPage(id) {
       console.log(id);
     }

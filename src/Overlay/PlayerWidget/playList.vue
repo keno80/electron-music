@@ -10,7 +10,7 @@
       </div>
       <a-divider type="vertical"/>
       <div>
-        <a>
+        <a @click="cleanPlayList">
           <a-icon type="delete" class="icon_class"/>
           清空
         </a>
@@ -19,18 +19,26 @@
     <div class="pl_list">
       <a-list bordered :data-source="list">
         <a-list-item slot="renderItem" slot-scope="item, index">
-          <div class="music_content">
-            <a-icon type="caret-right"/>
-            {{ item.song.name }}
-          </div>
-          <div class="artist_content">
-            <p v-for="(artist, index) in item.song.artists" :key="index">
-              <a>{{ artist.name }}</a>
-              <span v-if="item.song.artists.length > 1 && index !== item.song.artists.length - 1">/</span>
-            </p>
-          </div>
-          <div class="time_content">
-            {{ item.song.duration | musicDuration }}
+          <div class="music_content" :class="[nowPlayId === item.id ? active : '']" @dblclick="playListDoubleClick(item, index)">
+            <div class="name_content">
+              <template v-if="nowPlayId === item.id">
+                <a-icon type="caret-right" v-if="playStatus && nowPlayId === item.id"/>
+                <a-icon type="pause" v-else/>
+              </template>
+              <span v-else style="margin-left: 14px"></span>
+              <p>
+                {{ item.song.name }}
+              </p>
+            </div>
+            <div class="artist_content">
+              <p v-for="(artist, index) in item.song.artists" :key="index">
+                <a>{{ artist.name }}</a>
+                <span v-if="item.song.artists.length > 1 && index !== item.song.artists.length - 1">/</span>
+              </p>
+            </div>
+            <div class="time_content">
+              {{ item.song.duration | musicDuration }}
+            </div>
           </div>
         </a-list-item>
       </a-list>
@@ -46,14 +54,43 @@ export default {
   name: "playList",
   computed: {
     ...mapGetters([
-      'list'
+      'list',
+      'nowPlayMusic',
+      'playStatus'
     ]),
+    //用于突出显示正在播放的音乐
+    nowPlayId() {
+      return this.nowPlayMusic.id
+    }
   },
   filters: {
     musicDuration(val) {
       return timeToString(val / 1000)
     }
-  }
+  },
+  data() {
+    return {
+      active: 'active'
+    }
+  },
+  methods: {
+    cleanPlayList() {
+      this.$store.dispatch('songs/cleanPlayList')
+    },
+    //播放列表双击事件
+    playListDoubleClick(info, index) {
+      //先判断当前双击的歌曲是不是正在播放
+      if (info.id === this.nowPlayMusic.id) {
+        if (!this.playStatus) {
+          this.$store.dispatch('songs/refreshPlayStatus', true)
+        }
+      } else {
+        //如果不是当前播放的歌曲，将播放双击的歌曲
+        let music = this.list[index]
+        this.$store.dispatch('songs/nowPlayMusic', music)
+      }
+    }
+  },
 }
 </script>
 
@@ -69,6 +106,7 @@ export default {
       margin: 0;
       width: 60%;
       color: #acacac;
+      font-size: 12px;
     }
 
     a {
@@ -84,33 +122,59 @@ export default {
   .pl_list {
     .ant-list-bordered {
       border-top: 1px solid #d9d9d9;
+      border-top: 1px solid #d9d9d9;
+      border-radius: unset;
 
       .ant-list-item {
         padding: 8px 26px 6px 6px;
         font-size: 12px;
-        color: #000000;
 
         .music_content {
-          width: 224px;
-          margin-right: 22px;
-        }
-
-        .artist_content {
           display: flex;
-          width: 80px;
-          margin-right: 10px;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
 
-          p {
-            margin: 0;
+          .name_content {
+            width: 224px;
+            margin-right: 22px;
+            display: flex;
+            align-items: center;
+
+            p {
+              margin: 0;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+            }
+          }
+
+          .artist_content {
+            display: flex;
+            width: 80px;
+            margin-right: 10px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+
+            p {
+              margin: 0;
+            }
+
+            a {
+              color: #acacac;
+            }
+          }
+
+          .time_content {
+            width: 62px;
+            color: #8e8e8e;
           }
         }
 
-        .time_content {
-          width: 62px;
-          color: #acacac;
+        .active {
+          color: #ec4141;
+
+          a {
+            color: #ec4141!important;
+          }
         }
       }
     }

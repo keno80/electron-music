@@ -5,7 +5,8 @@ const getters = {
 
 	nowPlayMusic: state => state.songs.nowPlayMusic,
 	list: state => state.songs.musicList.list,
-	listStatus: state => state.songs.musicList.listStatus
+	listStatus: state => state.songs.musicList.listStatus,
+	playStatus: state => state.songs.playStatus
 }
 
 export default getters

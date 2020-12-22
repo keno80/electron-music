@@ -24,7 +24,7 @@
       <div class="controller">
         <div class="play_widget">
           <a-icon type="step-backward" style="font-size: 20px"/>
-          <a-icon type="pause" style="font-size: 20px" class="play_style" @click="play" v-if="playing"/>
+          <a-icon type="pause" style="font-size: 20px" class="play_style" @click="play" v-if="playStatus"/>
           <a-icon type="caret-right" style="font-size: 20px" class="play_style" @click="play" v-else/>
           <a-icon type="step-forward" style="font-size: 20px"/>
         </div>
@@ -58,7 +58,7 @@
 <script>
 import global_api from "@/utils/global_api";
 import {mapGetters} from 'vuex'
-import {validObject} from "@/utils/validate";
+import {validObject, validArray} from "@/utils/validate";
 import {timeToString} from "@/utils/playerFn";
 
 export default {
@@ -67,7 +67,8 @@ export default {
     ...mapGetters([
       'nowPlayMusic',
       'listStatus',
-      'list'
+      'list',
+      'playStatus'
     ]),
     haveSongInfo() {
       return !validObject(this.nowPlayMusic)
@@ -75,13 +76,33 @@ export default {
   },
   watch: {
     '$store.state.songs.nowPlayMusic': function (newVal) {
-      console.log(newVal);
-      this.getMusic(newVal)
+      if (validObject(newVal)) {
+        this.getMusic(newVal)
+      }
+    },
+    '$store.state.songs.musicList.list': function (newVal) {
+      if (!validArray(newVal)) {
+        this.songUrl = ''
+        this.currentTime = '00:00'
+        this.totalTime = '00:00'
+        this.sliderVal = 0
+      }
+    },
+    //用于播放列表双击事件
+    '$store.state.songs.playStatus': function (newVal) {
+      let audio = this.$refs.audio
+      if (newVal === true) {
+        audio.play()
+      }
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.$refs.audio.volume = this.volumeVal / 100
+    })
   },
   data() {
     return {
-      playing: false,  //是否正在播放
       songUrl: '',  //音乐播放地址
       totalTime: '00:00',  //音乐总时长
       currentTime: '00:00',  //当前播放进度
@@ -92,12 +113,14 @@ export default {
   methods: {
     //获取音乐地址
     getMusic(info) {
-      this.$store.dispatch('songs/addPlayListMusic', info)
+      if (this.list.indexOf(info) === -1) {
+        this.$store.dispatch('songs/addPlayListMusic', info)
+      }
       global_api.getMusicUrl(info.id).then(res => {
         console.log(res);
         if (res.data.code === 200) {
           this.songUrl = res.data.data[0].url
-          this.playing = true
+          this.$store.dispatch('songs/refreshPlayStatus', true)
           this.audioInit()
         }
       })
@@ -105,16 +128,18 @@ export default {
     //每次播放音乐时初始化
     audioInit() {
       let audio = this.$refs.audio
-      audio.addEventListener('timeupdate', () => {
+      audio.addEventListener('canplay', () => {
         this.totalTime = timeToString(audio.duration)
-        this.currentTime = timeToString(audio.currentTime)
+      })
 
+      audio.addEventListener('timeupdate', () => {
+        this.currentTime = timeToString(audio.currentTime)
         this.sliderVal = (audio.currentTime / audio.duration).toFixed(2) * 100
       })
 
       audio.addEventListener('ended', () => {
         console.log('播放完毕');
-        this.playing = false
+        this.$store.dispatch('songs/refreshPlayStatus', false)
       })
     },
     //播放，暂停
@@ -122,11 +147,11 @@ export default {
       let audio = this.$refs.audio
       //播放前先检查播放列表有无音乐
       if (this.list.length !== 0) {
-        if (this.playing) {
-          this.playing = false
+        if (this.playStatus) {
+          this.$store.dispatch('songs/refreshPlayStatus', false)
           audio.pause()
         } else {
-          this.playing = true
+          this.$store.dispatch('songs/refreshPlayStatus', true)
           audio.play()
         }
       }

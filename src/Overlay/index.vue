@@ -9,6 +9,7 @@
         placement="right"
         :closable="false"
         :visible="listStatus"
+        :maskClosable="true"
         :z-index="1000"
         :width="420"
         :wrap-style="{ position: 'absolute' }"
@@ -70,6 +71,16 @@ export default {
   width: 500px;
 
   .ant-drawer-wrapper-body {
+    .ant-drawer-header {
+      text-align: center;
+      border: none;
+
+      .ant-drawer-title {
+        font-size: 14px;
+        color: #929292;
+      }
+    }
+
     .ant-drawer-body {
       padding: 10px 0;
     }
