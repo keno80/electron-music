@@ -22,5 +22,16 @@ export default {
 				id
 			}
 		})
+	},
+
+	//获取歌词
+	getMusicLyric(id) {
+		return axios({
+			url: `${baseUrl}/lyric`,
+			method: 'get',
+			params: {
+				id
+			}
+		})
 	}
 }

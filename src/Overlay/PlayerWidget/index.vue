@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="song_info" v-else>
-        <img :src="nowPlayMusic.picUrl">
+        <img :src="nowPlayMusic.picUrl" @click="showDetail">
         <div class="blocks">
           <p class="song_name">{{ nowPlayMusic.song.name }}</p>
           <p class="artists">
@@ -51,6 +51,10 @@
       </div>
     </div>
 
+    <a-drawer placement="bottom" :closable="false" :visible="detailStatus" height="535px" wrapClassName="detail_drawer">
+      <music-detail/>
+    </a-drawer>
+
     <audio :src="songUrl" autoplay ref="audio"/>
   </a-layout-footer>
 </template>
@@ -58,29 +62,34 @@
 <script>
 import global_api from "@/utils/global_api";
 import {mapGetters} from 'vuex'
-import {validObject, validArray} from "@/utils/validate";
-import {timeToString} from "@/utils/playerFn";
+import {validArray, validObject} from "@/utils/validate";
+import {timeToString, TimeToSeconds} from "@/utils/playerFn";
+import MusicDetail from '@/components/MusicDetail'
 
 export default {
   name: "index",
+  components: {
+    MusicDetail
+  },
   computed: {
     ...mapGetters([
       'nowPlayMusic',
       'listStatus',
       'list',
-      'playStatus'
+      'playStatus',
+      'detailStatus'
     ]),
     haveSongInfo() {
       return !validObject(this.nowPlayMusic)
     },
   },
   watch: {
-    '$store.state.songs.nowPlayMusic': function (newVal) {
+    '$store.state.playerWidget.nowPlayMusic': function (newVal) {
       if (validObject(newVal)) {
         this.getMusic(newVal)
       }
     },
-    '$store.state.songs.musicList.list': function (newVal) {
+    '$store.state.playerWidget.musicList.list': function (newVal) {
       if (!validArray(newVal)) {
         this.songUrl = ''
         this.currentTime = '00:00'
@@ -89,7 +98,7 @@ export default {
       }
     },
     //用于播放列表双击事件
-    '$store.state.songs.playStatus': function (newVal) {
+    '$store.state.playerWidget.playStatus': function (newVal) {
       let audio = this.$refs.audio
       if (newVal === true && this.songUrl !== '') {
         audio.play()
@@ -107,23 +116,61 @@ export default {
       totalTime: '00:00',  //音乐总时长
       currentTime: '00:00',  //当前播放进度
       sliderVal: 0,  //播放条百分比
-      volumeVal: 70  //音量百分比
+      volumeVal: 70,  //音量百分比
+      lyric: [],  //歌词
+      lyricIndex: 0  //歌词index
     }
   },
   methods: {
     //获取音乐地址
     getMusic(info) {
       if (this.list.indexOf(info) === -1) {
-        this.$store.dispatch('songs/addPlayListMusic', info)
+        this.$store.dispatch('playerWidget/addPlayListMusic', info)
       }
       global_api.getMusicUrl(info.id).then(res => {
         console.log(res);
         if (res.data.code === 200) {
           this.songUrl = res.data.data[0].url
-          this.$store.dispatch('songs/refreshPlayStatus', true)
+          this.getLyric(info.id)
+          this.$store.dispatch('playerWidget/refreshPlayStatus', true)
           this.audioInit()
         }
       })
+    },
+    //获取歌词
+    getLyric(id) {
+      global_api.getMusicLyric(id).then(res => {
+        if (res.data.code === 200) {
+          this.handleLyric(res.data.lrc.lyric)
+        }
+      })
+    },
+    //歌词处理
+    handleLyric(lrc) {
+      let lyricsObjArr = []
+      const regNewLine = /\n/
+      const lineArr = lrc.split(regNewLine)  //每行歌词的数组
+      const regTime = /\[\d{2}:\d{2}.\d{2,3}\]/
+
+      lineArr.forEach((item) => {
+        if (item === '') return
+        const obj = {}
+        const time = item.match(regTime)
+
+        obj.lyric = item.split(']')[1].trim() === '' ? '' : item.split(']')[1].trim()
+        obj.time = time ? TimeToSeconds(time[0].slice(1, time[0].length -1)) : 0
+        obj.uid = Math.random().toString().slice(6)
+        obj.lyric === '' ? console.log('这一行没有歌词') : lyricsObjArr.push(obj)
+      })
+
+      this.lyric = lyricsObjArr.map((item, index) => {
+        item.index = index
+        return {
+          ...item
+        }
+      })
+
+      this.$store.dispatch('playerWidget/saveLyric', this.lyric)
     },
     //每次播放音乐时初始化
     audioInit() {
@@ -135,11 +182,22 @@ export default {
       audio.addEventListener('timeupdate', () => {
         this.currentTime = timeToString(audio.currentTime)
         this.sliderVal = (audio.currentTime / audio.duration).toFixed(2) * 100
+
+        let compareTime = audio.currentTime;
+        for (let i = 0; i < this.lyric.length; i++) {
+          if (compareTime > parseInt(this.lyric[i].time)) {
+            const index = this.lyric[i].index;
+            if (i === parseInt(index)) {
+              this.lyricIndex = i;
+              this.$store.dispatch('playerWidget/saveLyricIndex', this.lyricIndex)
+            }
+          }
+        }
       })
 
       audio.addEventListener('ended', () => {
         console.log('播放完毕');
-        this.$store.dispatch('songs/refreshPlayStatus', false)
+        this.$store.dispatch('playerWidget/refreshPlayStatus', false)
       })
     },
     //播放，暂停
@@ -148,10 +206,10 @@ export default {
       //播放前先检查播放列表有无音乐
       if (this.list.length !== 0) {
         if (this.playStatus) {
-          this.$store.dispatch('songs/refreshPlayStatus', false)
+          this.$store.dispatch('playerWidget/refreshPlayStatus', false)
           audio.pause()
         } else {
-          this.$store.dispatch('songs/refreshPlayStatus', true)
+          this.$store.dispatch('playerWidget/refreshPlayStatus', true)
           audio.play()
         }
       }
@@ -173,7 +231,7 @@ export default {
         } else if (type === 'next') {
           index + 1 >= this.list.length ? index = 0 : index++
         }
-        this.$store.dispatch('songs/nowPlayMusic', this.list[index])
+        this.$store.dispatch('playerWidget/nowPlayMusic', this.list[index])
       }
     },
     //拖动进度条改变播放进度
@@ -190,7 +248,11 @@ export default {
     },
     //显示播放列表
     showMusicList() {
-      this.listStatus ? this.$store.dispatch('songs/closeMusicList') : this.$store.dispatch('songs/openMusicList')
+      this.listStatus ? this.$store.dispatch('playerWidget/closeMusicList') : this.$store.dispatch('playerWidget/openMusicList')
+    },
+    //显示音乐播放详情页
+    showDetail() {
+      this.$store.dispatch('playerWidget/toggleDetailStatus')
     },
     toArtistPage(id) {
 
@@ -331,6 +393,22 @@ export default {
         }
       }
 
+    }
+  }
+}
+
+//播放抽屉样式
+.detail_drawer {
+  /deep/ .ant-drawer-content-wrapper {
+    margin-bottom: 75px;
+
+    .ant-drawer-wrapper-body {
+      overflow: hidden;
+    }
+
+    .ant-drawer-body {
+      height: 100%;
+      padding: 0;
     }
   }
 }
