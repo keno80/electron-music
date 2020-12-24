@@ -3,10 +3,13 @@ const getters = {
 	backNum: state => state.navigation.backNum,
 	forwardNum: state => state.navigation.forwardNum,
 
-	nowPlayMusic: state => state.songs.nowPlayMusic,
-	list: state => state.songs.musicList.list,
-	listStatus: state => state.songs.musicList.listStatus,
-	playStatus: state => state.songs.playStatus
+	nowPlayMusic: state => state.playerWidget.nowPlayMusic,
+	list: state => state.playerWidget.musicList.list,
+	listStatus: state => state.playerWidget.musicList.listStatus,
+	playStatus: state => state.playerWidget.playStatus,
+	detailStatus: state => state.playerWidget.musicDetail.status,
+	lyric: state => state.playerWidget.Lyric,
+	lyricIndex: state => state.playerWidget.LyricIndex
 }
 
 export default getters

@@ -81,19 +81,19 @@ export default {
   },
   methods: {
     cleanPlayList() {
-      this.$store.dispatch('songs/cleanPlayList')
+      this.$store.dispatch('playerWidget/cleanPlayList')
     },
     //播放列表双击事件
     playListDoubleClick(info, index) {
       //先判断当前双击的歌曲是不是正在播放
       if (info.id === this.nowPlayMusic.id) {
         if (!this.playStatus) {
-          this.$store.dispatch('songs/refreshPlayStatus', true)
+          this.$store.dispatch('playerWidget/refreshPlayStatus', true)
         }
       } else {
         //如果不是当前播放的歌曲，将播放双击的歌曲
         let music = this.list[index]
-        this.$store.dispatch('songs/nowPlayMusic', music)
+        this.$store.dispatch('playerWidget/nowPlayMusic', music)
       }
     }
   },
