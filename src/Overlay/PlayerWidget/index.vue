@@ -1,5 +1,5 @@
 <template>
-  <a-layout-footer style="z-index: 1001">
+  <a-layout-footer style="z-index: 1001" :class="[detailStatus && !listStatus ? 'custom_footer' : '']">
     <div class="player_content">
       <div class="song_info" v-if="haveSongInfo">
         <a-avatar shape="square" :size="50" icon="smile"/>
@@ -16,7 +16,7 @@
             <template v-for="(item, index) in nowPlayMusic.song.artists">
               <a class="artists_name" @click="toArtistPage(item.id)">{{ item.name }}</a>
               <span
-                v-if="nowPlayMusic.song.artists.length > 1 && index !== nowPlayMusic.song.artists.length - 1">/</span>
+                  v-if="nowPlayMusic.song.artists.length > 1 && index !== nowPlayMusic.song.artists.length - 1">/</span>
             </template>
           </p>
         </div>
@@ -51,8 +51,24 @@
       </div>
     </div>
 
-    <a-drawer placement="bottom" :closable="false" :visible="detailStatus" height="535px" wrapClassName="detail_drawer">
+    <!--    音乐详情-->
+    <a-drawer placement="bottom" :closable="false" :visible="detailStatus" height="670px" wrapClassName="detail_drawer">
       <music-detail/>
+    </a-drawer>
+
+    <!--    播放列表-->
+    <a-drawer
+        title="播放列表"
+        placement="right"
+        :closable="false"
+        :visible="listStatus"
+        :maskClosable="true"
+        :z-index="1000"
+        :width="420"
+        :wrap-style="{ position: 'absolute' }"
+        wrapClassName="play_list_drawer"
+    >
+      <play-list/>
     </a-drawer>
 
     <audio :src="songUrl" autoplay ref="audio"/>
@@ -65,11 +81,13 @@ import {mapGetters} from 'vuex'
 import {validArray, validObject} from "@/utils/validate";
 import {timeToString, TimeToSeconds} from "@/utils/playerFn";
 import MusicDetail from '@/components/MusicDetail'
+import PlayList from './playList'
 
 export default {
   name: "index",
   components: {
-    MusicDetail
+    MusicDetail,
+    PlayList
   },
   computed: {
     ...mapGetters([
@@ -158,7 +176,7 @@ export default {
         const time = item.match(regTime)
 
         obj.lyric = item.split(']')[1].trim() === '' ? '' : item.split(']')[1].trim()
-        obj.time = time ? TimeToSeconds(time[0].slice(1, time[0].length -1)) : 0
+        obj.time = time ? TimeToSeconds(time[0].slice(1, time[0].length - 1)) : 0
         obj.uid = Math.random().toString().slice(6)
         obj.lyric === '' ? console.log('这一行没有歌词') : lyricsObjArr.push(obj)
       })
@@ -274,6 +292,10 @@ export default {
       height: 50px;
       width: 50px;
       border-radius: 4px;
+
+      &:hover {
+        filter: blur(20px);
+      }
     }
 
     .blocks {
@@ -397,10 +419,51 @@ export default {
   }
 }
 
+//footer样式
+.ant-layout-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid rgba(172, 172, 172, 0.5);
+  padding: 10px;
+  background-color: #f7f7f7;
+}
+
+.custom_footer {
+  background-color: rgba(230, 230, 230, 0.48);
+  transition: all ease-in-out 1s;
+}
+
+//播放列表抽屉样式
+.ant-drawer-right {
+  overflow: hidden;
+
+  /deep/ .ant-drawer-content {
+    padding: 5px 0 75px 0;
+    width: 420px;
+
+    .ant-drawer-wrapper-body {
+      .ant-drawer-header {
+        text-align: center;
+        border: none;
+
+        .ant-drawer-title {
+          font-size: 14px;
+          color: #929292;
+        }
+      }
+
+      .ant-drawer-body {
+        padding: 10px 0;
+      }
+    }
+  }
+}
+
 //播放抽屉样式
 .detail_drawer {
   /deep/ .ant-drawer-content-wrapper {
-    margin-bottom: 75px;
+    //margin-bottom: 75px;
 
     .ant-drawer-wrapper-body {
       overflow: hidden;

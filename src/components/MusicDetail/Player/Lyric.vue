@@ -1,14 +1,14 @@
 <template>
   <div class="inner_lyric_content">
-      <div>
-<!--        <div class="lyric_item">-->
-        <div class="lyric_item" :style="lyricScroll">
-          <template v-if="lyric.length > 0">
-            <p v-for="(item, index) in lyric" :key="index" :class="[lyricIndex === index ? 'active_lyc' : '']">
-              {{ item.lyric }}</p>
-          </template>
-        </div>
+    <div>
+      <!--        <div class="lyric_item">-->
+      <div class="lyric_item" :style="lyricScroll">
+        <template v-if="lyric.length > 0">
+          <p v-for="(item, index) in lyric" :key="index" :class="[lyricIndex === index ? 'active_lyc' : '']">
+            {{ item.lyric }}</p>
+        </template>
       </div>
+    </div>
   </div>
 </template>
 
@@ -39,13 +39,11 @@ export default {
 
 <style scoped lang="scss">
 .inner_lyric_content {
-  height: 330px;
-  width: 380px;
-  overflow: hidden;
 
   p {
     margin: 0;
     line-height: 30px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, .6);
   }
 
   .lyric_item {

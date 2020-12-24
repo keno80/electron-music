@@ -4,17 +4,21 @@
       <div class="blurbg"></div>
     </div>
 
-    <div class="music_cover">
-      <img :src="nowPlayMusic.picUrl + '?param=300y300'">
+    <!--    <div class="music_cover">-->
+    <!--      <img :src="nowPlayMusic.picUrl + '?param=300y300'">-->
+    <!--    </div>-->
+
+    <div class="collapse_button">
+      <a-button icon="fullscreen-exit" size="large" @click="hideDetail"/>
     </div>
 
     <div class="left_content">
-      <div class="music_info_content">
+      <div class="music_info_content" v-if="Object.keys(nowPlayMusic).length !== 0">
         <p class="music_name">{{ nowPlayMusic.name }}</p>
         <div class="music_info">
-          <p class="album_info">专辑：<a>{{nowPlayMusic.song.album.name}}</a></p>
+          <p class="album_info">专辑：<a>{{ nowPlayMusic.song.album.name }}</a></p>
           <p class="artists_info" v-for="(info, index) in nowPlayMusic.song.artists" :key="index">
-            歌手：<a>{{info.name}}</a>
+            歌手：<a>{{ info.name }}</a>
             <span v-if="nowPlayMusic.song.artists.length > 1 && index !== nowPlayMusic.song.artists.length - 1">/</span>
           </p>
         </div>
@@ -41,8 +45,10 @@ export default {
       'nowPlayMusic'
     ])
   },
-  created() {
-    console.log('1');
+  methods: {
+    hideDetail() {
+      this.$store.dispatch('playerWidget/toggleDetailStatus')
+    }
   }
 }
 </script>
@@ -62,23 +68,46 @@ export default {
     height: 100%;
     width: 100%;
     position: absolute;
-    background-color: rgba(255, 255, 255, .74);
+    background-color: rgba(255, 255, 255, .5);
     z-index: -1;
+  }
+}
+
+.collapse_button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1;
+
+  .ant-btn-lg {
+    background-color: rgba(255, 255, 255, .4);
+    border: none;
+
+    &:hover {
+      color: #ec4141;
+    }
   }
 }
 
 .left_content {
   position: absolute;
-  top: 50px;
-  right: 100px;
+  top: 40px;
+  //right: 100px;
+  width: 100%;
+  height: 535px;
 
   .lyric_content {
     position: relative;
-    top: 30px;
+    top: 40px;
+    text-align: center;
+    height: 400px;
+    overflow: hidden;
   }
 }
 
 .music_info_content {
+  text-align: center;
+
   .music_name {
     font-size: 22px;
     color: #444444;
@@ -90,7 +119,9 @@ export default {
 
   .music_info {
     display: flex;
-    width: 100%;
+    justify-content: center;
+    width: 400px;
+    margin: 0 auto;
 
     p {
       font-size: 12px;
@@ -102,8 +133,7 @@ export default {
     }
 
     .album_info {
-      width: 130px;
-      margin-right: 10px;
+      margin-right: 50px;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
