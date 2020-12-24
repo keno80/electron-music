@@ -292,10 +292,6 @@ export default {
       height: 50px;
       width: 50px;
       border-radius: 4px;
-
-      &:hover {
-        filter: blur(20px);
-      }
     }
 
     .blocks {
