@@ -6,7 +6,7 @@
           <img src="../../../public/logo.png" width="30px" height="30px" style="margin-top: 15px">
           <div class="logo">Electron</div>
 <!--          <navigation/>-->
-          <search/>
+          <head-search/>
         </div>
       </div>
       <div class="header_right">
@@ -22,13 +22,14 @@
 </template>
 
 <script>
-import {Navigation, Search, Login, Tools, Window} from '@/Overlay/Header'
+import {Navigation, Login, Tools, Window} from '@/Overlay/Header'
+import HeadSearch from '@/components/HeadSearch'
 
 export default {
   name: "index",
   components: {
     Navigation,
-    Search,
+    HeadSearch,
     Login,
     Tools,
     Window

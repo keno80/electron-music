@@ -1,5 +1,5 @@
 import {
-	Affix,
+	AutoComplete,
 	Avatar,
 	Button,
 	Col,
@@ -20,7 +20,7 @@ import {
 
 const antd = {
 	install: (vue => {
-		vue.use(Affix)
+		vue.use(AutoComplete)
 		vue.use(Avatar)
 		vue.use(Button)
 		vue.use(Col)
