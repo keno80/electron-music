@@ -28,6 +28,11 @@
 
     <!--    歌手-->
     <div class="artists_grid" v-else-if="searchInfo.searchType === 100">
+      <div class="common_style" v-if="!searchBlockReady">
+        <a-spin tip="努力搜索中...">
+          <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true"/>
+        </a-spin>
+      </div>
       <artists-grid :data="searchResponse.artists"/>
     </div>
   </div>

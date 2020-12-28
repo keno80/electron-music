@@ -6,9 +6,9 @@
           <img :src="item.img1v1Url + '?param=80y80'" v-if="item.picUrl === null">
           <img :src="item.picUrl + '?param=80y80'" v-else>
           <div class="artist_name">
-            <p>{{item.name}}</p>
-            <p style="color: #acacac;font-size: 13px">专辑数：{{item.albumSize}}</p>
-            <p style="color: #acacac;font-size: 13px">MV数：{{item.mvSize}}</p>
+            <p>{{ item.name }}</p>
+            <p style="color: #acacac;font-size: 13px">专辑数：{{ item.albumSize }}</p>
+            <p style="color: #acacac;font-size: 13px">MV数：{{ item.mvSize }}</p>
           </div>
         </div>
       </a>
@@ -32,7 +32,7 @@ export default {
   justify-content: space-between;
 
   .artist_block {
-    width: 240px;
+    width: 250px;
     display: flex;
     align-items: center;
     border: 1px solid #efefef;
@@ -42,6 +42,7 @@ export default {
 
     &:hover {
       border: 1px solid #ec4141;
+      box-shadow: 0 0 5px rgba(235, 65, 65, .7);
       transition: ease-in-out .4s;
     }
 
