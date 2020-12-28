@@ -30,8 +30,6 @@ export default {
     return {
       dataSource: [],
       searchFocus: false,  //搜索框是否获取了焦点
-      page: 0,
-      size: 100,
       search: '',
       type: 1
     }

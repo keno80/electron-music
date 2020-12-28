@@ -7,35 +7,43 @@
     />
     <div class="search_tab">
       <template v-for="(item, index) in tabType">
-        <a class="tab_item" :class="[searchInfo.searchType === item.value ? 'tab_active' : '']">{{ item.name }}</a>
+        <a class="tab_item" :class="[searchInfo.searchType === item.value ? 'tab_active' : '']"
+           @click="changeSearchType(item.value)">{{ item.name }}</a>
       </template>
     </div>
 
-
-    <div class="common_style" v-if="!searchBlockReady">
-      <a-spin tip="努力搜索中...">
-        <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true" />
-      </a-spin>
-    </div>
-    <div class="search_block" v-else>
-      <songs-table :data="searchResponse.songs"/>
+    <div class="search_block">
+      <div class="common_style" v-if="!searchBlockReady">
+        <a-spin tip="努力搜索中...">
+          <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true"/>
+        </a-spin>
+      </div>
+      <template v-else>
+        <songs-table :data="searchResponse.songs"/>
+        <a-pagination size="small" v-model="page" :total="searchResponse.songCount" :pageSize="size" @change="offsetChange"/>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex'
+import Pagination from '@/components/Pagination'
 import songsTable from './components/songsTable'
 import global_api from "@/utils/global_api";
 
 export default {
   name: "index",
   components: {
-    songsTable
+    songsTable,
+    Pagination
   },
   watch: {
     //搜索关键词
     '$store.state.headSearch.searchInfo': function (val) {
+      console.log(val);
+      this.page = 1
+      this.offset = 0
       this.fetchData()
     }
     //搜索类型
@@ -79,8 +87,9 @@ export default {
           name: '用户',
           value: 1002
         }],
-      searchResponse: [],
-      page: 0,
+      searchResponse: {},
+      offset: 0,  //搜索偏移量
+      page: 1,
       size: 100,
       searchBlockReady: false,
     }
@@ -88,12 +97,20 @@ export default {
   methods: {
     fetchData() {
       this.searchBlockReady = false
-      global_api.search(this.page, this.size, this.searchInfo.searchWord, this.searchInfo.searchType).then(res => {
+      global_api.search(this.offset, this.size, this.searchInfo.searchWord, this.searchInfo.searchType).then(res => {
         if (res.data.code === 200) {
           this.searchBlockReady = true
           this.searchResponse = res.data.result
         }
       })
+    },
+    changeSearchType(type) {
+      this.$store.dispatch('headSearch/saveSearchInfo', {searchWord: this.searchInfo.searchWord, searchType: type})
+    },
+    offsetChange(page, pageSize) {
+      this.page = page
+      this.offset = (page - 1) * pageSize
+      this.fetchData()
     }
   }
 }
@@ -142,6 +159,7 @@ export default {
               th {
                 padding: 4px 0;
                 font-size: 13px;
+
                 .cell {
                   padding: 0 4px;
                 }
@@ -156,7 +174,7 @@ export default {
           .el-table__row {
             td {
               padding: 4px 0;
-              font-family: PingFang Thin SC,sans-serif;
+              font-family: PingFang Thin SC, sans-serif;
               font-size: 13px;
 
               .cell {
@@ -168,6 +186,41 @@ export default {
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+
+  .ant-pagination {
+    padding: 20px 10px;
+    text-align: center;
+
+    /deep/ .ant-pagination-item-active {
+      border-color: #ec4141;
+
+      a {
+        color: #ec4141;
+      }
+    }
+
+    /deep/ .ant-pagination-item:hover {
+      a {
+        color: #ec4141;
+      }
+    }
+
+    /deep/.ant-pagination-next:hover {
+      .ant-pagination-item-link {
+        color: #ec4141;
+      }
+    }
+
+    /deep/.ant-pagination-jump-next-custom-icon {
+      .ant-pagination-item-link {
+        .ant-pagination-item-container {
+          .ant-pagination-item-link-icon {
+            color: #ec4141;
           }
         }
       }

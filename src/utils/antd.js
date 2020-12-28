@@ -13,6 +13,7 @@ import {
 	List,
 	Menu,
 	PageHeader,
+	Pagination,
 	Progress,
 	Row,
 	Slider,
@@ -36,6 +37,7 @@ const antd = {
 		vue.use(List)
 		vue.use(Menu)
 		vue.use(PageHeader)
+		vue.use(Pagination)
 		vue.use(Progress)
 		vue.use(Row)
 		vue.use(Slider)

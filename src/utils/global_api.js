@@ -14,12 +14,12 @@ export default {
 	},
 
 	//搜索接口
-	search(page, size, keywords, type) {
+	search(offset, size, keywords, type) {
 		return axios({
 			url: `${baseUrl}/cloudsearch`,
 			method: 'get',
 			params: {
-				offset: page,
+				offset,
 				limit: size,
 				keywords,
 				type
