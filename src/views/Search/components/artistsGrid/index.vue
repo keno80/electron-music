@@ -3,11 +3,12 @@
     <template v-for="(item, index) in data">
       <a>
         <div class="artist_block">
-          <img :src="item.picUrl + '?param=80y80'">
+          <img :src="item.img1v1Url + '?param=80y80'" v-if="item.picUrl === null">
+          <img :src="item.picUrl + '?param=80y80'" v-else>
           <div class="artist_name">
             <p>{{item.name}}</p>
             <p style="color: #acacac;font-size: 13px">专辑数：{{item.albumSize}}</p>
-            <p style="color: #acacac;font-size: 13px">MV数：{{item.albumSize}}</p>
+            <p style="color: #acacac;font-size: 13px">MV数：{{item.mvSize}}</p>
           </div>
         </div>
       </a>
