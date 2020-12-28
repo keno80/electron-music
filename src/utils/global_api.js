@@ -13,6 +13,20 @@ export default {
 		})
 	},
 
+	//搜索接口
+	search(page, size, keywords, type) {
+		return axios({
+			url: `${baseUrl}/cloudsearch`,
+			method: 'get',
+			params: {
+				offset: page,
+				limit: size,
+				keywords,
+				type
+			}
+		})
+	},
+
 	//获取音乐url
 	getMusicUrl(id) {
 		return axios({

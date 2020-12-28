@@ -14,7 +14,6 @@ const getters = {
 
 	//头部搜索
 	searchInfo: state => state.headSearch.searchInfo,
-	searchResponse: state => state.headSearch.searchResponse
 }
 
 export default getters

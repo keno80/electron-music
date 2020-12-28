@@ -11,7 +11,13 @@
       </template>
     </div>
 
-    <div class="search_block">
+
+    <div class="common_style" v-if="!searchBlockReady">
+      <a-spin tip="努力搜索中...">
+        <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true" />
+      </a-spin>
+    </div>
+    <div class="search_block" v-else>
       <songs-table :data="searchResponse.songs"/>
     </div>
   </div>
@@ -20,16 +26,26 @@
 <script>
 import {mapGetters} from 'vuex'
 import songsTable from './components/songsTable'
+import global_api from "@/utils/global_api";
 
 export default {
   name: "index",
   components: {
     songsTable
   },
+  watch: {
+    //搜索关键词
+    '$store.state.headSearch.searchInfo': function (val) {
+      this.fetchData()
+    }
+    //搜索类型
+  },
+  created() {
+    this.fetchData()
+  },
   computed: {
     ...mapGetters([
       'searchInfo',
-      'searchResponse'
     ])
   },
   data() {
@@ -63,6 +79,21 @@ export default {
           name: '用户',
           value: 1002
         }],
+      searchResponse: [],
+      page: 0,
+      size: 100,
+      searchBlockReady: false,
+    }
+  },
+  methods: {
+    fetchData() {
+      this.searchBlockReady = false
+      global_api.search(this.page, this.size, this.searchInfo.searchWord, this.searchInfo.searchType).then(res => {
+        if (res.data.code === 200) {
+          this.searchBlockReady = true
+          this.searchResponse = res.data.result
+        }
+      })
     }
   }
 }
@@ -71,6 +102,14 @@ export default {
 <style scoped lang="scss">
 .search_content {
   width: 100%;
+
+  .common_style {
+    width: 774px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+  }
 
   .ant-page-header {
     padding: 10px 0 14px 0;
@@ -123,6 +162,10 @@ export default {
               .cell {
                 white-space: nowrap;
                 padding: 0 4px;
+
+                a {
+                  color: #6b6b6b;
+                }
               }
             }
           }

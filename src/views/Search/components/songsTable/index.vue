@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="data" stripe>
+  <el-table :data="data" stripe @row-dblclick="dbcPlayMusic">
     <el-table-column type="index" width="50px" align="center"></el-table-column>
     <el-table-column width="50px" align="center">
       <template slot-scope="{row}">
@@ -11,7 +11,7 @@
     <el-table-column prop="ar" label="歌手" width="124">
       <template slot-scope="{row}">
         <span v-for="(item, index) in row.ar">
-          <a>{{ item.name }}</a>
+          <a class="ar_style">{{ item.name }}</a>
           <span v-if="row.ar.length > 1 && index !== row.ar.length - 1">/</span>
         </span>
       </template>
@@ -37,6 +37,7 @@
 
 <script>
 import {numberToTime} from "@/utils/playerFn";
+import global_api from "@/utils/global_api";
 
 export default {
   name: "index",
@@ -50,6 +51,26 @@ export default {
   },
   data() {
     return {}
+  },
+  methods: {
+    dbcPlayMusic(row) {
+      console.log(row);
+      global_api.checkMusicAvailable(row.id).then(res => {
+        if (res.data.success === true) {
+          let obj = {
+            id: row.id,
+            name: row.name,
+            picUrl: row.al.picUrl,
+            song: {
+              artists: row.ar,
+              album: row.al,
+              name: row.name
+            }
+          }
+          this.$store.dispatch('playerWidget/nowPlayMusic', obj)
+        }
+      })
+    }
   }
 }
 </script>

@@ -47,7 +47,7 @@ export default {
       })
     },
     saveSearchWord(searchWord) {
-      this.$store.dispatch('headSearch/saveSearchWord', searchWord)
+      this.$store.dispatch('headSearch/saveSearchInfo', {searchWord, searchType: 1})
     }
   }
 }

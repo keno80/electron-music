@@ -43,6 +43,7 @@ export default {
   },
   methods: {
     getMusic(item) {
+      console.log(item);
       global_api.checkMusicAvailable(item.id).then(res => {
         if (res.data.success === true) {
           this.$store.dispatch('playerWidget/nowPlayMusic', item)

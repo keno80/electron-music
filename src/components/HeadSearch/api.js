@@ -8,19 +8,5 @@ export default {
 			url: `${baseUrl}/search/hot/detail`,
 			method: 'get'
 		})
-	},
-
-	//搜索接口
-	search(page, size, keywords, type) {
-		return axios({
-			url: `${baseUrl}/cloudsearch`,
-			method: 'get',
-			params: {
-				offset: page,
-				limit: size,
-				keywords,
-				type
-			}
-		})
 	}
 }
