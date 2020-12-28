@@ -30,3 +30,15 @@ export function TimeToSeconds(time) {
 	}
 	return Number(sec + "." + ms);
 }
+
+//不含小数点的歌曲时长处理
+export function numberToTime(param) {
+	let time = ''
+	if (param.toString().length  === 6) {
+		time = param.toString().slice(0, 3) + '.' + param.toString().slice(3)
+	} else if (param.toString().length === 5) {
+		time = param.toString().slice(0, 2) + '.' + param.toString().slice(2)
+	}
+
+	return timeToString(time)
+}

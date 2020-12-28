@@ -195,6 +195,7 @@ export default {
       let audio = this.$refs.audio
       audio.addEventListener('canplay', () => {
         this.totalTime = timeToString(audio.duration)
+        console.log(audio.duration);
       })
 
       audio.addEventListener('timeupdate', () => {

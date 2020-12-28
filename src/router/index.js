@@ -21,6 +21,13 @@ const routes = [
         name: 'personalFM',
         component: () => import('@/views/PersonalFM/index'),
         meta: {title: '私人FM'}
+      },
+      {
+        path: 'search',
+        name: 'search',
+        component: () => import('@/views/Search/index'),
+        meta: {title: '搜索'},
+        hidden: true
       }
     ]
   },

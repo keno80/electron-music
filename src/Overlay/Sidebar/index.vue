@@ -7,7 +7,7 @@
         :style="{ height: '100%', borderRight: 0 }"
         theme="light"
       >
-        <a-menu-item v-for="(route, index) in routes.children" :key="index">
+        <a-menu-item v-for="(route, index) in routes.children" :key="index" v-if="route.hidden !== true">
           <app-link :to="resolvePath(route.path)">
             {{ route.meta.title }}
           </app-link>

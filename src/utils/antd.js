@@ -12,6 +12,8 @@ import {
 	Layout,
 	List,
 	Menu,
+	PageHeader,
+	Progress,
 	Row,
 	Slider,
 	Spin,
@@ -33,6 +35,8 @@ const antd = {
 		vue.use(Layout)
 		vue.use(List)
 		vue.use(Menu)
+		vue.use(PageHeader)
+		vue.use(Progress)
 		vue.use(Row)
 		vue.use(Slider)
 		vue.use(Spin)

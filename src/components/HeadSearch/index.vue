@@ -5,8 +5,6 @@
         :data-source="dataSource"
         style="width: 200px"
         placeholder="搜索"
-        @select="onSelect"
-        @search="onSearch"
         @change="onChange"
         @focus="onFocus"
         @blur="onBlur"
@@ -16,6 +14,7 @@
 </template>
 
 <script>
+import api from './api'
 import HotSearchPanel from "@/components/HeadSearch/HotSearchPanel";
 
 export default {
@@ -23,19 +22,33 @@ export default {
   components: {
     HotSearchPanel
   },
+  watch: {
+    '$store.state.headSearch.searchInfo.searchWord': function (val) {
+      this.search = val
+      this.fetchData()
+    }
+  },
   data() {
     return {
-      search: '',
       dataSource: [],
-      searchFocus: false  //搜索框是否获取了焦点
+      searchFocus: false,  //搜索框是否获取了焦点
+      page: 0,
+      size: 100,
+      search: '',
+      type: 1
     }
   },
   methods: {
-    onSelect() {
-
-    },
-    onSearch() {
-
+    fetchData() {
+      this.$router.push({
+        path: '/search'
+      })
+      this.$store.dispatch('headSearch/saveSearchType', this.type)
+      api.search(this.page, this.size, this.search, this.type).then(res => {
+        if (res.data.code === 200) {
+          this.$store.dispatch('headSearch/saveResponse', res.data.result)
+        }
+      })
     },
     onChange() {
 
