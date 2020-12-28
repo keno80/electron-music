@@ -2,7 +2,7 @@
   <div class="search_content">
     <a-page-header
       title="搜索"
-      :sub-title="'找到 ' + searchResponse.songCount + ' 首单曲'"
+      :sub-title="pageHeadTitle"
       @back="() => null"
     />
     <div class="search_tab">
@@ -12,7 +12,8 @@
       </template>
     </div>
 
-    <div class="search_block">
+    <!--    单曲-->
+    <div class="search_block" v-if="searchInfo.searchType === 1">
       <div class="common_style" v-if="!searchBlockReady">
         <a-spin tip="努力搜索中...">
           <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true"/>
@@ -20,8 +21,14 @@
       </div>
       <template v-else>
         <songs-table :data="searchResponse.songs"/>
-        <a-pagination size="small" v-model="page" :total="searchResponse.songCount" :pageSize="size" @change="offsetChange"/>
+        <a-pagination size="small" v-model="page" :total="searchResponse.songCount" :pageSize="size"
+                      @change="offsetChange"/>
       </template>
+    </div>
+
+    <!--    歌手-->
+    <div class="artists_grid" v-else-if="searchInfo.searchType === 100">
+      <artists-grid :data="searchResponse.artists"/>
     </div>
   </div>
 </template>
@@ -30,18 +37,19 @@
 import {mapGetters} from 'vuex'
 import Pagination from '@/components/Pagination'
 import songsTable from './components/songsTable'
+import artistsGrid from './components/artistsGrid'
 import global_api from "@/utils/global_api";
 
 export default {
   name: "index",
   components: {
     songsTable,
+    artistsGrid,
     Pagination
   },
   watch: {
     //搜索关键词
     '$store.state.headSearch.searchInfo': function (val) {
-      console.log(val);
       this.page = 1
       this.offset = 0
       this.fetchData()
@@ -87,6 +95,7 @@ export default {
           name: '用户',
           value: 1002
         }],
+      pageHeadTitle: '找到 0 首单曲',
       searchResponse: {},
       offset: 0,  //搜索偏移量
       page: 1,
@@ -101,6 +110,16 @@ export default {
         if (res.data.code === 200) {
           this.searchBlockReady = true
           this.searchResponse = res.data.result
+
+          switch (this.searchInfo.searchType) {
+            case 1: {
+              this.pageHeadTitle = `找到 ${res.data.result.songCount} 首单曲`
+              break;
+            }
+            case 100: {
+              this.pageHeadTitle = `找到 ${res.data.result.artistCount} 位歌手`
+            }
+          }
         }
       })
     },
@@ -210,13 +229,13 @@ export default {
       }
     }
 
-    /deep/.ant-pagination-next:hover {
+    /deep/ .ant-pagination-next:hover {
       .ant-pagination-item-link {
         color: #ec4141;
       }
     }
 
-    /deep/.ant-pagination-jump-next-custom-icon {
+    /deep/ .ant-pagination-jump-next-custom-icon {
       .ant-pagination-item-link {
         .ant-pagination-item-container {
           .ant-pagination-item-link-icon {
