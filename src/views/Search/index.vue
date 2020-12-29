@@ -35,6 +35,16 @@
       </div>
       <artists-grid :data="searchResponse.artists"/>
     </div>
+
+    <!--    专辑-->
+    <div class="artists_grid" v-else-if="searchInfo.searchType === 10">
+      <div class="common_style" v-if="!searchBlockReady">
+        <a-spin tip="努力搜索中...">
+          <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true"/>
+        </a-spin>
+      </div>
+      <albums-grid :data="searchResponse.albums"/>
+    </div>
   </div>
 </template>
 
@@ -43,6 +53,7 @@ import {mapGetters} from 'vuex'
 import Pagination from '@/components/Pagination'
 import songsTable from './components/songsTable'
 import artistsGrid from './components/artistsGrid'
+import albumsGrid from './components/albumsGrid'
 import global_api from "@/utils/global_api";
 
 export default {
@@ -50,6 +61,7 @@ export default {
   components: {
     songsTable,
     artistsGrid,
+    albumsGrid,
     Pagination
   },
   watch: {
@@ -123,6 +135,11 @@ export default {
             }
             case 100: {
               this.pageHeadTitle = `找到 ${res.data.result.artistCount} 位歌手`
+              break
+            }
+            case 10: {
+              this.pageHeadTitle = `找到 ${res.data.result.albumCount} 张专辑`
+              break
             }
           }
         }

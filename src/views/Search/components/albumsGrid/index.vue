@@ -1,14 +1,13 @@
 <template>
-  <div class="artists_content">
+  <div class="albums_content">
     <template v-for="(item, index) in data">
       <a>
-        <div class="artist_block">
+        <div class="albums_block">
           <img :src="item.img1v1Url + '?param=80y80'" v-if="item.picUrl === null">
           <img :src="item.picUrl + '?param=80y80'" v-else>
-          <div class="artist_name">
-            <p>{{ item.name }}</p>
-            <p style="color: #acacac;font-size: 13px">专辑数：{{ item.albumSize }}</p>
-            <p style="color: #acacac;font-size: 13px">MV数：{{ item.mvSize }}</p>
+          <div class="albums_name">
+            <p style="margin-bottom: 10px">{{ item.name }}</p>
+            <p class="artist_name" v-for="(artist, index) in item.artists" :key="index">{{ artist.name }}</p>
           </div>
         </div>
       </a>
@@ -26,7 +25,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.artists_content {
+.albums_content {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -36,7 +35,7 @@ export default {
     content: "";
   }
 
-  .artist_block {
+  .albums_block {
     width: 250px;
     display: flex;
     align-items: center;
@@ -51,8 +50,9 @@ export default {
       transition: ease-in-out .4s;
     }
 
-    .artist_name {
+    .albums_name {
       margin-left: 10px;
+      width: 150px;
 
       p {
         margin: 0;
@@ -61,6 +61,12 @@ export default {
         overflow: hidden;
         white-space: nowrap;
         color: #4c4c4c;
+      }
+
+      .artist_name {
+        line-height: 1.5;
+        font-size: 12px;
+        color: #acacac;
       }
     }
 
