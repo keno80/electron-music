@@ -68,10 +68,10 @@ export default {
   },
   methods: {
     //根据type来执行操作
-    doSuggestAction(type) {
+    doSuggestAction(type, item) {
       switch (type) {
         case 'song':
-
+          this.$store.dispatch('playerWidget/nowPlayMusicId', item.id)
       }
     }
   }
