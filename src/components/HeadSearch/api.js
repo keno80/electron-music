@@ -8,5 +8,16 @@ export default {
 			url: `${baseUrl}/search/hot/detail`,
 			method: 'get'
 		})
+	},
+
+	//搜索建议接口
+	getSearchSuggest(keywords) {
+		return axios({
+			url: `${baseUrl}/search/suggest`,
+			method: 'get',
+			params: {
+				keywords
+			}
+		})
 	}
 }
