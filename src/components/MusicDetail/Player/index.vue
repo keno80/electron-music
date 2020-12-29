@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <div :style="{ backgroundImage: 'url('+ nowPlayMusic.picUrl +')'}" class="blurImg">
+    <div :style="{ backgroundImage: 'url('+ nowPlayMusic.al.picUrl +')'}" class="blurImg">
       <div class="blurbg"></div>
     </div>
 
@@ -16,10 +16,10 @@
       <div class="music_info_content" v-if="Object.keys(nowPlayMusic).length !== 0">
         <p class="music_name">{{ nowPlayMusic.name }}</p>
         <div class="music_info">
-          <p class="album_info">专辑：<a>{{ nowPlayMusic.song.album.name }}</a></p>
-          <p class="artists_info" v-for="(info, index) in nowPlayMusic.song.artists" :key="index">
+          <p class="album_info">专辑：<a>{{ nowPlayMusic.al.name }}</a></p>
+          <p class="artists_info" v-for="(info, index) in nowPlayMusic.ar" :key="index">
             歌手：<a>{{ info.name }}</a>
-            <span v-if="nowPlayMusic.song.artists.length > 1 && index !== nowPlayMusic.song.artists.length - 1">/</span>
+            <span v-if="nowPlayMusic.ar.length > 1 && index !== nowPlayMusic.ar.length - 1">/</span>
           </p>
         </div>
       </div>
