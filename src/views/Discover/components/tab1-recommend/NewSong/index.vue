@@ -5,7 +5,7 @@
     </div>
     <div class="songs_content">
       <div class="blocks" v-for="(item, index) in newSong" :key="index">
-        <a @click="getMusic(item)">
+        <a @click="addToNowPlay(item.id)">
           <img :src="item.picUrl">
           <div class="play_icon">
             <a-icon type="caret-right" class="play_icon_style"/>
@@ -26,7 +26,7 @@
 
 <script>
 import {mapGetters} from 'vuex'
-
+import {validObject} from "@/utils/validate";
 import global_api from "@/utils/global_api";
 
 export default {
@@ -38,17 +38,12 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'list'
+      'nowPlayMusic'
     ])
   },
   methods: {
-    getMusic(item) {
-      console.log(item);
-      global_api.checkMusicAvailable(item.id).then(res => {
-        if (res.data.success === true) {
-          this.$store.dispatch('playerWidget/nowPlayMusic', item)
-        }
-      })
+    addToNowPlay(id) {
+      this.$store.dispatch('playerWidget/nowPlayMusicId', id)
     },
     //去歌手详情页
     toArtistPage(id) {
