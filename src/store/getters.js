@@ -4,6 +4,7 @@ const getters = {
 	forwardNum: state => state.navigation.forwardNum,
 
 	//底部播放控件
+	nowPlayMusicId: state => state.playerWidget.nowPlayMusicId,
 	nowPlayMusic: state => state.playerWidget.nowPlayMusic,
 	list: state => state.playerWidget.musicList.list,
 	listStatus: state => state.playerWidget.musicList.listStatus,

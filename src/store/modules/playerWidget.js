@@ -1,5 +1,6 @@
 const state = {
-	nowPlayMusic: {},
+	nowPlayMusic: {},  //当前播放的音乐详情
+	nowPlayMusicId: '',  //当前播放的音乐ID  -  音乐详情将通过id获得
 	Lyric: [],
 	LyricIndex: 0,
 	musicList: {
@@ -13,6 +14,9 @@ const state = {
 }
 
 const mutations = {
+	NOW_PLAY_MUSIC_ID: (state, id) => {
+		state.nowPlayMusicId = id
+	},
 	NOW_PLAY_MUSIC: (state, musicInfo) => {
 		state.nowPlayMusic = musicInfo
 	},
@@ -39,6 +43,7 @@ const mutations = {
 	},
 	CLEAN_PLAY_LIST: (state) => {
 		state.nowPlayMusic = {}
+		state.nowPlayMusicId = ''
 		state.musicList.list = []
 		state.playStatus = false
 		state.musicDetail.status = false
@@ -46,6 +51,9 @@ const mutations = {
 }
 
 const actions = {
+	nowPlayMusicId({commit}, id) {
+		commit('NOW_PLAY_MUSIC_ID', id)
+	},
 	nowPlayMusic({commit}, musicInfo) {
 		commit('NOW_PLAY_MUSIC', musicInfo)
 	},
