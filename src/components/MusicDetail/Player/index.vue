@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%">
+  <div style="height: 100%" v-if="Object.keys(nowPlayMusic).length !== 0">
     <div :style="{ backgroundImage: 'url('+ nowPlayMusic.al.picUrl +')'}" class="blurImg">
       <div class="blurbg"></div>
     </div>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="left_content">
-      <div class="music_info_content" v-if="Object.keys(nowPlayMusic).length !== 0">
+      <div class="music_info_content">
         <p class="music_name">{{ nowPlayMusic.name }}</p>
         <div class="music_info">
           <p class="album_info">专辑：<a>{{ nowPlayMusic.al.name }}</a></p>
