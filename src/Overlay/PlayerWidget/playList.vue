@@ -33,17 +33,17 @@
               </template>
               <span v-else style="margin-left: 14px"></span>
               <p>
-                {{ item.song.name }}
+                {{ item.name }}
               </p>
             </div>
             <div class="artist_content">
-              <p v-for="(artist, index) in item.song.artists" :key="index">
+              <p v-for="(artist, index) in item.ar" :key="index">
                 <a>{{ artist.name }}</a>
-                <span v-if="item.song.artists.length > 1 && index !== item.song.artists.length - 1">/</span>
+                <span v-if="item.ar.length > 1 && index !== item.ar.length - 1">/</span>
               </p>
             </div>
             <div class="time_content">
-              {{ item.song.duration | musicDuration }}
+              {{ item.dt | musicDuration }}
             </div>
           </div>
         </a-list-item>
@@ -92,8 +92,8 @@ export default {
         }
       } else {
         //如果不是当前播放的歌曲，将播放双击的歌曲
-        let music = this.list[index]
-        this.$store.dispatch('playerWidget/nowPlayMusic', music)
+        let id = this.list[index].id
+        this.$store.dispatch('playerWidget/nowPlayMusicId', id)
       }
     }
   },

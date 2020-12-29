@@ -1,5 +1,5 @@
 <template>
-  <a-layout-footer style="z-index: 1001" :class="[detailStatus && !listStatus ? 'custom_footer' : '']">
+  <a-layout-footer style="z-index: 1002" :class="[detailStatus && !listStatus ? 'custom_footer' : '']">
     <div class="player_content">
       <div class="song_info" v-if="haveSongInfo">
         <a-avatar shape="square" :size="50" icon="smile"/>
@@ -8,15 +8,16 @@
           <p class="artists">赶快去挑一首吧</p>
         </div>
       </div>
+
       <div class="song_info" v-else>
-        <img :src="nowPlayMusic.picUrl" @click="showDetail">
+        <img :src="nowPlayMusic.al.picUrl" @click="showDetail">
         <div class="blocks">
-          <p class="song_name">{{ nowPlayMusic.song.name }}</p>
+          <p class="song_name">{{ nowPlayMusic.name }}</p>
           <p class="artists">
-            <template v-for="(item, index) in nowPlayMusic.song.artists">
+            <template v-for="(item, index) in nowPlayMusic.ar">
               <a class="artists_name" @click="toArtistPage(item.id)">{{ item.name }}</a>
               <span
-                  v-if="nowPlayMusic.song.artists.length > 1 && index !== nowPlayMusic.song.artists.length - 1">/</span>
+                v-if="nowPlayMusic.ar.length > 1 && index !== nowPlayMusic.ar.length - 1">/</span>
             </template>
           </p>
         </div>
@@ -58,15 +59,15 @@
 
     <!--    播放列表-->
     <a-drawer
-        title="播放列表"
-        placement="right"
-        :closable="false"
-        :visible="listStatus"
-        :maskClosable="true"
-        :z-index="1000"
-        :width="420"
-        :wrap-style="{ position: 'absolute' }"
-        wrapClassName="play_list_drawer"
+      title="播放列表"
+      placement="right"
+      :closable="false"
+      :visible="listStatus"
+      :maskClosable="true"
+      :z-index="1000"
+      :width="420"
+      :wrap-style="{ position: 'absolute', zIndex: 1001}"
+      wrapClassName="play_list_drawer"
     >
       <play-list/>
     </a-drawer>
@@ -82,6 +83,7 @@ import {validArray, validObject} from "@/utils/validate";
 import {timeToString, TimeToSeconds} from "@/utils/playerFn";
 import MusicDetail from '@/components/MusicDetail'
 import PlayList from './playList'
+import lodash from "lodash";
 
 export default {
   name: "index",
@@ -102,10 +104,8 @@ export default {
     },
   },
   watch: {
-    '$store.state.playerWidget.nowPlayMusic': function (newVal) {
-      if (validObject(newVal)) {
-        this.getMusic(newVal)
-      }
+    '$store.state.playerWidget.nowPlayMusicId': function (newVal) {
+      this.getMusic(newVal)
     },
     '$store.state.playerWidget.musicList.list': function (newVal) {
       if (!validArray(newVal)) {
@@ -130,6 +130,7 @@ export default {
   },
   data() {
     return {
+      musicAvailable: false,  //音乐是否可用
       songUrl: '',  //音乐播放地址
       totalTime: '00:00',  //音乐总时长
       currentTime: '00:00',  //当前播放进度
@@ -141,17 +142,36 @@ export default {
   },
   methods: {
     //获取音乐地址
-    getMusic(info) {
-      if (this.list.indexOf(info) === -1) {
-        this.$store.dispatch('playerWidget/addPlayListMusic', info)
-      }
-      global_api.getMusicUrl(info.id).then(res => {
-        console.log(res);
-        if (res.data.code === 200) {
-          this.songUrl = res.data.data[0].url
-          this.getLyric(info.id)
-          this.$store.dispatch('playerWidget/refreshPlayStatus', true)
-          this.audioInit()
+    getMusic(id) {
+      //检查音乐是否可用
+      global_api.checkMusicAvailable(id).then(res => {
+        if (res.data.success === true) {
+          this.musicAvailable = true
+
+          //获取音乐详情
+          global_api.getMusicDetail(id).then(res => {
+            if (res.data.code === 200) {
+              //存储到正在播放
+              this.$store.dispatch('playerWidget/nowPlayMusic', res.data.songs[0])
+              //判断当前音乐再播放列表是否存在，不存在则存储
+              if (lodash.findIndex(this.list, res.data.songs[0]) === -1) {
+                this.$store.dispatch('playerWidget/addPlayListMusic', res.data.songs[0])
+              }
+            }
+          })
+
+          //获取音乐播放地址
+          global_api.getMusicUrl(id).then(res => {
+            console.log(res);
+            if (res.data.code === 200) {
+              this.songUrl = res.data.data[0].url
+              this.getLyric(id)
+              this.$store.dispatch('playerWidget/refreshPlayStatus', true)
+              this.audioInit()
+            }
+          })
+        } else {
+          this.musicAvailable = false
         }
       })
     },
@@ -250,7 +270,7 @@ export default {
         } else if (type === 'next') {
           index + 1 >= this.list.length ? index = 0 : index++
         }
-        this.$store.dispatch('playerWidget/nowPlayMusic', this.list[index])
+        this.$store.dispatch('playerWidget/nowPlayMusicId', this.list[index].id)
       }
     },
     //拖动进度条改变播放进度
