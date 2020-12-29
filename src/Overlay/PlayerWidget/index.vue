@@ -179,7 +179,17 @@ export default {
     getLyric(id) {
       global_api.getMusicLyric(id).then(res => {
         if (res.data.code === 200) {
-          this.handleLyric(res.data.lrc.lyric)
+          if (res.data.nolyric && res.data.nolyric === true) {
+            this.lyric.push({
+              index: 0,
+              lyric: '暂时没有歌词哟~',
+              time: 0,
+              uid: Math.random().toString().slice(6)
+            })
+            this.$store.dispatch('playerWidget/saveLyric', this.lyric)
+          } else {
+            this.handleLyric(res.data.lrc.lyric)
+          }
         }
       })
     },
@@ -208,6 +218,7 @@ export default {
         }
       })
 
+      console.log(this.lyric);
       this.$store.dispatch('playerWidget/saveLyric', this.lyric)
     },
     //每次播放音乐时初始化
