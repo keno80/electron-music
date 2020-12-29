@@ -13,6 +13,17 @@ export default {
 		})
 	},
 
+	//获取音乐详情
+	getMusicDetail(ids) {
+		return axios({
+			url: `${baseUrl}/song/detail`,
+			method: 'get',
+			params: {
+				ids
+			}
+		})
+	},
+
 	//搜索接口
 	search(offset, size, keywords, type) {
 		return axios({
