@@ -54,22 +54,7 @@ export default {
   },
   methods: {
     dbcPlayMusic(row) {
-      console.log(row);
-      global_api.checkMusicAvailable(row.id).then(res => {
-        if (res.data.success === true) {
-          let obj = {
-            id: row.id,
-            name: row.name,
-            picUrl: row.al.picUrl,
-            song: {
-              artists: row.ar,
-              album: row.al,
-              name: row.name
-            }
-          }
-          this.$store.dispatch('playerWidget/nowPlayMusic', obj)
-        }
-      })
+      this.$store.dispatch('playerWidget/nowPlayMusicId', row.id)
     }
   }
 }
