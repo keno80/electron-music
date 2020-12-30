@@ -3,7 +3,7 @@
     <a-page-header
       title="搜索"
       :sub-title="pageHeadTitle"
-      @back="() => null"
+      @back="toDiscovery"
     />
     <div class="search_tab">
       <template v-for="(item, index) in tabType">
@@ -218,7 +218,8 @@ export default {
       this.page = page
       this.offset = (page - 1) * pageSize
       this.fetchData()
-    }
+    },
+    toDiscovery() {}
   }
 }
 </script>
