@@ -1,11 +1,11 @@
 <template>
-  <div class="user_content">
+  <div class="common_content">
     <template v-for="(item, index) in data">
       <a>
-        <div class="user_block">
+        <div class="common_block user_block">
           <img :src="item.avatarUrl + '?param=80y80'">
           <img :src="item.avatarDetail.identityIconUrl" v-if="item.avatarDetail !== null" class="avatar_corner">
-          <div class="user_name">
+          <div class="common_name user_name">
             <p>
               {{ item.nickname }}
               <a-icon type="man" style="color: #40a9ff" v-if="item.gender === 1"/>
@@ -36,59 +36,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.user_content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-
-  &:after {
-    width: 380px;
-    content: "";
-  }
-
-  .user_block {
-    width: 380px;
-    display: flex;
-    align-items: center;
-    border: 1px solid #efefef;
-    margin: 6px 0;
-    border-radius: 4px;
-    padding: 2px;
-    position: relative;
-
-    &:hover {
-      border: 1px solid #ec4141;
-      box-shadow: 0 0 5px rgba(235, 65, 65, .7);
-      transition: ease-in-out .4s;
-    }
-
-    .user_name {
-      margin-left: 10px;
-
-      p {
-        margin: 0;
-        line-height: 1.9;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        color: #4c4c4c;
-        width: 280px;
-      }
-    }
-
-    img {
-      border-radius: 50%;
-      border: 1px solid #efefef;
-    }
-
-    .avatar_corner {
-      border: none;
-      position: absolute;
-      width: 25px;
-      height: 25px;
-      bottom: 2px;
-      left: 60px;
-    }
-  }
-}
+@import "src/style/searchComponentsStyle";
 </style>

@@ -1,0 +1,110 @@
+//公用样式
+
+.common_content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  &:after {
+    width: 250px;
+    content: "";
+  }
+
+  .common_block {
+    width: 250px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #efefef;
+    margin: 6px 0;
+    border-radius: 4px;
+    padding: 2px;
+
+    &:hover {
+      border: 1px solid #ec4141;
+      box-shadow: 0 0 5px rgba(235, 65, 65, .7);
+      transition: ease-in-out .4s;
+    }
+
+    .common_name {
+      margin-left: 10px;
+
+      p {
+        width: 150px;
+        margin: 0;
+        line-height: 1.9;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        color: #4c4c4c;
+      }
+    }
+
+    img {
+      border-radius: 4px;
+      border: 1px solid #efefef;
+    }
+  }
+}
+
+//专辑样式
+.common_name {
+  .album_artists_name {
+    line-height: 1.5 !important;
+    font-size: 12px;
+    color: #acacac !important;
+  }
+}
+
+//视频界面样式
+.common_content {
+  .videos_block {
+    width: 250px;
+    margin: 6px 0;
+    border-radius: 4px;
+
+    .videos_name {
+
+      p {
+        margin: 0;
+        line-height: 1.9;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        color: #4c4c4c;
+      }
+    }
+
+    img {
+      border-radius: 4px;
+      border: 1px solid #efefef;
+    }
+  }
+}
+
+//用户界面样式
+.common_content {
+  .user_block {
+    width: 380px;
+    position: relative;
+
+    .user_name {
+      p {
+        width: 280px;
+      }
+    }
+
+    img {
+      border-radius: 50%;
+    }
+
+    .avatar_corner {
+      border: none;
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      bottom: 2px;
+      left: 60px;
+    }
+  }
+}
+
