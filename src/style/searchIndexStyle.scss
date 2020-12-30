@@ -1,0 +1,126 @@
+.search_content {
+  width: 100%;
+
+  .common_style {
+    width: 774px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+  }
+
+  .ant-page-header {
+    padding: 10px 0 14px 0;
+  }
+
+  .search_tab {
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 8px;
+
+    .tab_item {
+      margin-right: 30px;
+      color: #222222;
+
+      &:hover {
+        color: #ec4141;
+      }
+    }
+
+    .tab_active {
+      color: #ec4141;
+    }
+  }
+
+  .search_block {
+    /deep/ .el-table {
+      .el-table__header-wrapper {
+        .el-table__header {
+          .has-gutter {
+            tr {
+              th {
+                padding: 4px 0;
+                font-size: 13px;
+
+                .cell {
+                  padding: 0 4px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .el-table__body-wrapper {
+        .el-table__body {
+          .el-table__row {
+            td {
+              padding: 4px 0;
+              font-family: PingFang Thin SC, sans-serif;
+              font-size: 13px;
+
+              .cell {
+                white-space: nowrap;
+                padding: 0 4px;
+
+                a {
+                  color: #6b6b6b;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .lyric_table {
+    /deep/.el-table {
+      td {
+        vertical-align: 0;
+
+        .cell {
+          div {
+            b {
+              color: #40a9ff;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .ant-pagination {
+    padding: 20px 10px;
+    text-align: center;
+
+    /deep/ .ant-pagination-item-active {
+      border-color: #ec4141;
+
+      a {
+        color: #ec4141;
+      }
+    }
+
+    /deep/ .ant-pagination-item:hover {
+      a {
+        color: #ec4141;
+      }
+    }
+
+    /deep/ .ant-pagination-next:hover {
+      .ant-pagination-item-link {
+        color: #ec4141;
+      }
+    }
+
+    /deep/ .ant-pagination-jump-next-custom-icon {
+      .ant-pagination-item-link {
+        .ant-pagination-item-container {
+          .ant-pagination-item-link-icon {
+            color: #ec4141;
+          }
+        }
+      }
+    }
+  }
+}
