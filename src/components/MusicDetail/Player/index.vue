@@ -17,8 +17,9 @@
         <p class="music_name">{{ nowPlayMusic.name }}</p>
         <div class="music_info">
           <p class="album_info">专辑：<a>{{ nowPlayMusic.al.name }}</a></p>
+          <p>歌手：</p>
           <p class="artists_info" v-for="(info, index) in nowPlayMusic.ar" :key="index">
-            歌手：<a>{{ info.name }}</a>
+            <a>{{ info.name }}</a>
             <span v-if="nowPlayMusic.ar.length > 1 && index !== nowPlayMusic.ar.length - 1">/</span>
           </p>
         </div>

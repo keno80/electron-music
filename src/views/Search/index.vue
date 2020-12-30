@@ -65,6 +65,16 @@
       </div>
       <music-list-grid :data="searchResponse.playlists"/>
     </div>
+
+    <!--    歌词-->
+    <div class="search_block lyric_table" v-else-if="searchInfo.searchType === 1006">
+      <div class="common_style" v-if="!searchBlockReady">
+        <a-spin tip="努力搜索中...">
+          <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true"/>
+        </a-spin>
+      </div>
+      <lyric-table :data="searchResponse.songs"/>
+    </div>
   </div>
 </template>
 
@@ -76,6 +86,7 @@ import artistsGrid from './components/artistsGrid'
 import albumsGrid from './components/albumsGrid'
 import videosGrid from './components/videosGrid'
 import musicListGrid from './components/musicListGrid'
+import lyricTable from './components/lyricTable'
 import global_api from "@/utils/global_api";
 import PlayList from "@/Overlay/PlayerWidget/playList";
 
@@ -88,6 +99,7 @@ export default {
     albumsGrid,
     videosGrid,
     musicListGrid,
+    lyricTable,
     Pagination
   },
   watch: {
@@ -175,6 +187,10 @@ export default {
               this.pageHeadTitle = `找到 ${res.data.result.playlistCount} 个歌单`
               break
             }
+            case 1006: {
+              this.pageHeadTitle = `找到 ${res.data.result.songCount} 首包含搜索歌词的单曲`
+              break
+            }
           }
         }
       })
@@ -260,6 +276,22 @@ export default {
                   color: #6b6b6b;
                 }
               }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .lyric_table {
+    /deep/.el-table {
+      td {
+        vertical-align: 0;
+
+        .cell {
+          div {
+            b {
+              color: #40a9ff;
             }
           }
         }
