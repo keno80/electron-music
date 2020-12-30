@@ -75,6 +75,16 @@
       </div>
       <lyric-table :data="searchResponse.songs"/>
     </div>
+
+    <!--    用户-->
+    <div class="search_block lyric_table" v-else-if="searchInfo.searchType === 1002">
+      <div class="common_style" v-if="!searchBlockReady">
+        <a-spin tip="努力搜索中...">
+          <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true"/>
+        </a-spin>
+      </div>
+      <user-grid :data="searchResponse.userprofiles"/>
+    </div>
   </div>
 </template>
 
@@ -87,6 +97,7 @@ import albumsGrid from './components/albumsGrid'
 import videosGrid from './components/videosGrid'
 import musicListGrid from './components/musicListGrid'
 import lyricTable from './components/lyricTable'
+import userGrid from './components/userGrid'
 import global_api from "@/utils/global_api";
 import PlayList from "@/Overlay/PlayerWidget/playList";
 
@@ -100,6 +111,7 @@ export default {
     videosGrid,
     musicListGrid,
     lyricTable,
+    userGrid,
     Pagination
   },
   watch: {
@@ -189,6 +201,10 @@ export default {
             }
             case 1006: {
               this.pageHeadTitle = `找到 ${res.data.result.songCount} 首包含搜索歌词的单曲`
+              break
+            }
+            case 1002: {
+              this.pageHeadTitle = `找到 ${res.data.result.userprofileCount} 位用户`
               break
             }
           }
