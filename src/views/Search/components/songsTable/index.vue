@@ -37,7 +37,6 @@
 
 <script>
 import {numberToTime} from "@/utils/playerFn";
-import global_api from "@/utils/global_api";
 
 export default {
   name: "index",

@@ -55,6 +55,16 @@
       </div>
       <videos-grid :data="searchResponse.videos"/>
     </div>
+
+    <!--    歌单-->
+    <div class="music_list_grid" v-else-if="searchInfo.searchType === 1000">
+      <div class="common_style" v-if="!searchBlockReady">
+        <a-spin tip="努力搜索中...">
+          <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true"/>
+        </a-spin>
+      </div>
+      <music-list-grid :data="searchResponse.playlists"/>
+    </div>
   </div>
 </template>
 
@@ -65,15 +75,19 @@ import songsTable from './components/songsTable'
 import artistsGrid from './components/artistsGrid'
 import albumsGrid from './components/albumsGrid'
 import videosGrid from './components/videosGrid'
+import musicListGrid from './components/musicListGrid'
 import global_api from "@/utils/global_api";
+import PlayList from "@/Overlay/PlayerWidget/playList";
 
 export default {
   name: "index",
   components: {
+    PlayList,
     songsTable,
     artistsGrid,
     albumsGrid,
     videosGrid,
+    musicListGrid,
     Pagination
   },
   watch: {
@@ -155,6 +169,10 @@ export default {
             }
             case 1014: {
               this.pageHeadTitle = `找到 ${res.data.result.videoCount} 个视频`
+              break
+            }
+            case 1000: {
+              this.pageHeadTitle = `找到 ${res.data.result.playlistCount} 个歌单`
               break
             }
           }
