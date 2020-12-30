@@ -10,9 +10,9 @@
     <el-table-column prop="name" label="音乐标题" width="240">
       <template slot-scope="scope">
         <p>{{ scope.row.name }}</p>
-        <a-button size="small" style="margin-bottom: 10px" v-if="showMore === true && showMoreIndex === scope.$index"
-                  @click="unExpend">收起歌词
-        </a-button>
+        <a-button size="small" style="margin-bottom: 10px"
+                  v-if="showMore === true && showMoreIndex === scope.$index"
+                  @click="unExpend">收起歌词</a-button>
         <a-button size="small" style="margin-bottom: 10px" v-else @click="expend(scope.$index)">展开歌词</a-button>
         <template v-for="(lyric, index) in scope.row.lyrics">
           <div v-html="lyric" class="search_lyric_bold"
@@ -86,9 +86,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.search_lyric_bold {
-  b {
-    color: #40a9ff;
-  }
-}
 </style>
