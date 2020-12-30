@@ -37,13 +37,23 @@
     </div>
 
     <!--    专辑-->
-    <div class="artists_grid" v-else-if="searchInfo.searchType === 10">
+    <div class="albums_grid" v-else-if="searchInfo.searchType === 10">
       <div class="common_style" v-if="!searchBlockReady">
         <a-spin tip="努力搜索中...">
           <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true"/>
         </a-spin>
       </div>
       <albums-grid :data="searchResponse.albums"/>
+    </div>
+
+    <!--    视频-->
+    <div class="videos_grid" v-else-if="searchInfo.searchType === 1014">
+      <div class="common_style" v-if="!searchBlockReady">
+        <a-spin tip="努力搜索中...">
+          <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true"/>
+        </a-spin>
+      </div>
+      <videos-grid :data="searchResponse.videos"/>
     </div>
   </div>
 </template>
@@ -54,6 +64,7 @@ import Pagination from '@/components/Pagination'
 import songsTable from './components/songsTable'
 import artistsGrid from './components/artistsGrid'
 import albumsGrid from './components/albumsGrid'
+import videosGrid from './components/videosGrid'
 import global_api from "@/utils/global_api";
 
 export default {
@@ -62,6 +73,7 @@ export default {
     songsTable,
     artistsGrid,
     albumsGrid,
+    videosGrid,
     Pagination
   },
   watch: {
@@ -139,6 +151,10 @@ export default {
             }
             case 10: {
               this.pageHeadTitle = `找到 ${res.data.result.albumCount} 张专辑`
+              break
+            }
+            case 1014: {
+              this.pageHeadTitle = `找到 ${res.data.result.videoCount} 个视频`
               break
             }
           }
