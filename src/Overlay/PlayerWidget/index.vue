@@ -17,7 +17,7 @@
             <template v-for="(item, index) in nowPlayMusic.ar">
               <a class="artists_name" @click="toArtistPage(item.id)">{{ item.name }}</a>
               <span
-                  v-if="nowPlayMusic.ar.length > 1 && index !== nowPlayMusic.ar.length - 1">/</span>
+                v-if="nowPlayMusic.ar.length > 1 && index !== nowPlayMusic.ar.length - 1">/</span>
             </template>
           </p>
         </div>
@@ -34,7 +34,7 @@
           <a-icon type="pause" style="font-size: 20px" class="play_style" @click="play" v-if="playStatus"/>
           <a-icon type="caret-right" style="font-size: 20px" class="play_style" @click="play" v-else/>
           <a-icon type="step-forward" class="next_icon" @click="previousAndNext('next')"/>
-          <icon-font type="icon-lyric" style="margin-left: 30px;vertical-align: 0"/>
+          <icon-font type="icon-lyric" style="margin-left: 30px;vertical-align: 0" @click="showLyric"/>
         </div>
         <div class="progress_bar">
           <a-row>
@@ -66,15 +66,15 @@
 
     <!--    播放列表-->
     <a-drawer
-        title="播放列表"
-        placement="right"
-        :closable="false"
-        :visible="listStatus"
-        :maskClosable="true"
-        :z-index="1000"
-        :width="420"
-        :wrap-style="{ position: 'absolute', zIndex: 1001}"
-        wrapClassName="play_list_drawer"
+      title="播放列表"
+      placement="right"
+      :closable="false"
+      :visible="listStatus"
+      :maskClosable="true"
+      :z-index="1000"
+      :width="420"
+      :wrap-style="{ position: 'absolute', zIndex: 1001}"
+      wrapClassName="play_list_drawer"
     >
       <play-list/>
     </a-drawer>
@@ -92,6 +92,9 @@ import MusicDetail from '@/components/MusicDetail'
 import PlayList from './playList'
 import lodash from "lodash";
 import {Icon} from 'ant-design-vue'
+import {createDeskLyricWindow} from '@/electron/lyricFloating'
+
+const {ipcRenderer} = window.require('electron')
 
 const IconFont = Icon.createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_2274170_4yb5dpmt4z.js'
@@ -161,6 +164,7 @@ export default {
     //获取音乐地址
     getMusic(id) {
       //检查音乐是否可用
+      let info = {}
       global_api.checkMusicAvailable(id).then(res => {
         if (res.data.success === true) {
           this.musicAvailable = true
@@ -170,6 +174,7 @@ export default {
             if (res.data.code === 200) {
               //存储到正在播放
               this.$store.dispatch('playerWidget/nowPlayMusic', res.data.songs[0])
+              info = res.data.songs[0]
               //判断当前音乐再播放列表是否存在，不存在则存储
               if (lodash.findIndex(this.list, res.data.songs[0]) === -1) {
                 this.$store.dispatch('playerWidget/addPlayListMusic', res.data.songs[0])
@@ -190,6 +195,9 @@ export default {
         } else {
           this.musicAvailable = false
         }
+      })
+      ipcRenderer.send('playMusic', () => {
+        console.log('send');
       })
     },
     //获取歌词
@@ -237,6 +245,15 @@ export default {
       })
 
       this.$store.dispatch('playerWidget/saveLyric', this.lyric)
+      localStorage.setItem('lyricFloating', JSON.stringify(this.lyric))
+    },
+    //显示桌面歌词
+    showLyric() {
+      createDeskLyricWindow()
+      // ipcRenderer.send('closeDesk')
+      localStorage.setItem('lyricFloating', JSON.stringify(this.lyric))
+
+
     },
     //每次播放音乐时初始化
     audioInit() {
@@ -250,6 +267,7 @@ export default {
         this.currentTime = timeToString(audio.currentTime)
         this.sliderVal = (audio.currentTime / audio.duration).toFixed(2) * 100
 
+        //歌词index
         let compareTime = audio.currentTime;
         for (let i = 0; i < this.lyric.length; i++) {
           if (compareTime > parseInt(this.lyric[i].time)) {
@@ -260,6 +278,9 @@ export default {
             }
           }
         }
+
+        //桌面歌词浮窗
+        localStorage.setItem('audioCurrentTime', compareTime)
       })
 
       audio.addEventListener('ended', () => {

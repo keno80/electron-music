@@ -47,6 +47,10 @@ const mutations = {
 		state.musicList.list = []
 		state.playStatus = false
 		state.musicDetail.status = false
+
+		//用于桌面歌词浮窗
+		localStorage.removeItem('lyricFloating')
+		localStorage.removeItem('audioCurrentTime')
 	},
 }
 

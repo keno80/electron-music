@@ -26,6 +26,7 @@ async function createWindow() {
 			// See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
 			webSecurity: false,
 			nodeIntegration: true,
+			enableRemoteModule: true,
 			// nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
 		}
 	})
@@ -61,6 +62,13 @@ async function createWindow() {
 	ipcMain.on('window-close', () => {
 		win.destroy()
 	})
+
+	//设置title
+	// window.onstorage = function (e) {
+	// 	if (e.key === 'play_music') {
+	// 		console.log(e.newValue);
+	// 	}
+	// }
 }
 
 // Quit when all windows are closed.
