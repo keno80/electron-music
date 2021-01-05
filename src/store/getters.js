@@ -15,6 +15,10 @@ const getters = {
 
 	//头部搜索
 	searchInfo: state => state.headSearch.searchInfo,
+
+	//歌单
+	musicListDetail: state => state.musicList.detail,
+	musicList: state => state.musicList.songs
 }
 
 export default getters
