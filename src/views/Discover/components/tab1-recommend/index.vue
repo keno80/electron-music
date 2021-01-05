@@ -61,7 +61,7 @@ export default {
 
       api.recommendSongList().then(res => {
         if (res.data.code === 200) {
-          // console.log(res);
+          console.log(res);
           this.songList = res.data.result
           this.songListReady = true
         }
@@ -69,7 +69,7 @@ export default {
 
       api.recommendNewSong().then(res => {
         if (res.data.code === 200) {
-          console.log(res);
+          // console.log(res);
           this.newSong = res.data.result
           this.newSongReady = true
         }
