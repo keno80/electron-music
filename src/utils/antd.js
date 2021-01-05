@@ -18,7 +18,8 @@ import {
 	Row,
 	Slider,
 	Spin,
-	Tabs
+	Tabs,
+	Tag
 } from "ant-design-vue";
 
 const antd = {
@@ -43,6 +44,7 @@ const antd = {
 		vue.use(Slider)
 		vue.use(Spin)
 		vue.use(Tabs)
+		vue.use(Tag)
 	})
 }
 

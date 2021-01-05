@@ -13,6 +13,17 @@ export default {
 		})
 	},
 
+	//获取歌单详情
+	getMusicListDetail(id) {
+		return axios({
+			url: `${baseUrl}/playList/detail`,
+			method: 'get',
+			params: {
+				id
+			}
+		})
+	},
+
 	//获取音乐详情
 	getMusicDetail(ids) {
 		return axios({
