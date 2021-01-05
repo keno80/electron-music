@@ -51,7 +51,22 @@
       </div>
     </div>
     <div class="music_list">
+      <a-tabs :active-key="key" @change="keyCB">
+        <a-tab-pane key="1" tab="歌曲列表">
+          <music-list-table :data="musicList"/>
+        </a-tab-pane>
+        <a-tab-pane key="2" tab="评论">
 
+        </a-tab-pane>
+        <a-tab-pane key="3" tab="收藏者">
+
+        </a-tab-pane>
+        <a-input slot="tabBarExtraContent" v-if="key === '1'" size="small" placeholder="搜索歌单音乐">
+          <a-tooltip slot="suffix" title="Extra information">
+            <a-icon type="search" style="color: rgba(0,0,0,.45)"/>
+          </a-tooltip>
+        </a-input>
+      </a-tabs>
     </div>
   </div>
 </template>
@@ -60,9 +75,13 @@
 import {mapGetters} from 'vuex'
 import lodash from "lodash";
 import dayjs from 'dayjs'
+import musicListTable from "@/views/MusicListDetail/component/musicListTable";
 
 export default {
   name: "index",
+  components: {
+    musicListTable
+  },
   computed: {
     ...mapGetters([
       'musicList',
@@ -79,12 +98,16 @@ export default {
   },
   data() {
     return {
-      ellipsis: true
+      ellipsis: true,
+      key: '1',
     }
   },
   methods: {
     showEllipsis() {
       this.ellipsis = !this.ellipsis
+    },
+    keyCB(key) {
+      this.key = key
     }
   },
   created() {
@@ -166,6 +189,84 @@ export default {
         .caret {
           position: absolute;
           color: rgb(89, 89, 89);
+        }
+      }
+    }
+  }
+
+  .music_list {
+    margin-top: 20px;
+
+    /deep/ .ant-tabs-bar {
+      border-bottom: none;
+      margin-bottom: 10px;
+
+      .ant-tabs-tab-active {
+        color: #ec4141;
+      }
+
+      .ant-tabs-tab:hover {
+        color: #ec4141;
+      }
+
+      .ant-tabs-ink-bar {
+        background-color: #ec4141;
+      }
+
+      .ant-input-sm {
+        border: none;
+        border-radius: 12px;
+        background-color: rgba(231, 231, 231, 0.2);
+        font-size: 12px;
+
+        &::placeholder {
+          font-size: 12px;
+          color: #cfcfcf;
+        }
+
+        &:focus {
+          border: none;
+          box-shadow: none;
+        }
+      }
+    }
+
+    /deep/ .el-table {
+      .el-table__header-wrapper {
+        .el-table__header {
+          .has-gutter {
+            tr {
+              th {
+                padding: 4px 0;
+                font-size: 13px;
+
+                .cell {
+                  padding: 0 4px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .el-table__body-wrapper {
+        .el-table__body {
+          .el-table__row {
+            td {
+              padding: 4px 0;
+              font-family: PingFang Thin SC, sans-serif;
+              font-size: 13px;
+
+              .cell {
+                white-space: nowrap;
+                padding: 0 4px;
+
+                a {
+                  color: #6b6b6b;
+                }
+              }
+            }
+          }
         }
       }
     }
