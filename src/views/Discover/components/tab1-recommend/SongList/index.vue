@@ -4,7 +4,7 @@
       <h2>推荐歌单</h2>
     </div>
     <div class="songs_content">
-      <a class="blocks" v-for="(item, index) in songList" :key="index" @click="showPlayList">
+      <a class="blocks" v-for="(item, index) in songList" :key="index" @click="showPlayList(item.id)">
         <img :src="item.picUrl">
         <p class="songs_list_name">{{ item.name }}</p>
         <div class="play_count">
@@ -21,6 +21,7 @@
 
 <script>
 import lodash from "lodash";
+import global_api from "@/utils/global_api";
 
 export default {
   name: "index",
@@ -35,8 +36,23 @@ export default {
     }
   },
   methods: {
-    showPlayList() {
-      console.log('click2');
+    showPlayList(id) {
+      global_api.getMusicListDetail(id).then(res => {
+        if (res.data.code === 200) {
+          this.$store.dispatch('musicList/saveMusicListDetail', res.data.playlist)
+
+          let arr = []
+          for (let item of res.data.playlist.trackIds) {
+            arr.push(item.id)
+          }
+          global_api.getMusicDetail(arr.join(',')).then(res => {
+            if (res.data.code === 200) {
+              this.$store.dispatch('musicList/saveMusicListSongs', res.data.songs)
+              this.$router.push('/music_list')
+            }
+          })
+        }
+      })
     },
     playListMusic() {
       console.log('click');

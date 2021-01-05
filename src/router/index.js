@@ -28,7 +28,13 @@ const routes = [
 				component: () => import('@/views/Search/index'),
 				meta: {title: '搜索'},
 				hidden: true
-			}
+			},
+			{
+				path: 'music_list',
+				name: 'music_list',
+					component: () => import('@/views/MusicListDetail/index'),
+				meta: {title: '歌单详情'}
+			},
 		]
 	},
 	{
