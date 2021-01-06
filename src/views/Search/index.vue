@@ -97,7 +97,7 @@ import albumsGrid from './components/albumsGrid'
 import videosGrid from './components/videosGrid'
 import musicListGrid from './components/musicListGrid'
 import lyricTable from './components/lyricTable'
-import userGrid from './components/userGrid'
+import userGrid from '@/components/UserGrid'
 import global_api from "@/utils/global_api";
 import PlayList from "@/Overlay/PlayerWidget/playList";
 
