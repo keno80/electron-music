@@ -56,10 +56,11 @@
           <music-list-table :data="musicList"/>
         </a-tab-pane>
         <a-tab-pane key="2" :tab="'评论(' + musicListDetail.commentCount + ')' ">
-          <comments :hotComments="comments.hotComments" :normalComments="comments.normalComments" :total="comments.total"/>
+          <comments :hotComments="comments.hotComments" :normalComments="comments.normalComments"
+                    :total="comments.total"/>
         </a-tab-pane>
         <a-tab-pane key="3" tab="收藏者">
-
+          <user-grid :data="subscribers"/>
         </a-tab-pane>
         <a-input slot="tabBarExtraContent" v-if="key === '1'" size="small" placeholder="搜索歌单音乐">
           <a-tooltip slot="suffix" title="Extra information">
@@ -77,13 +78,15 @@ import lodash from "lodash";
 import dayjs from 'dayjs'
 import musicListTable from "@/views/MusicListDetail/component/musicListTable";
 import Comments from '@/components/Comments'
+import UserGrid from '@/components/UserGrid'
 import global_api from "@/utils/global_api";
 
 export default {
   name: "index",
   components: {
     musicListTable,
-    Comments
+    Comments,
+    UserGrid
   },
   computed: {
     ...mapGetters([
@@ -107,7 +110,8 @@ export default {
         normalComments: [],
         hotComments: [],
         total: 0
-      }
+      },
+      subscribers: []
     }
   },
   methods: {
@@ -122,6 +126,15 @@ export default {
             this.comments.normalComments = res.data.comments
             this.comments.hotComments = res.data.hotComments
             this.comments.total = res.data.total
+          }
+          console.log(res);
+        })
+      }
+
+      if (key === '3') {
+        global_api.getMusicListSubscriber(this.musicListDetail.id).then(res => {
+          if (res.data.code === 200) {
+            this.subscribers = res.data.subscribers
           }
           console.log(res);
         })

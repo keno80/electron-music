@@ -36,6 +36,18 @@ export default {
 		})
 	},
 
+	//获取歌单收藏者
+	getMusicListSubscriber(id) {
+		return axios({
+			url: `${baseUrl}/playlist/subscribers`,
+			method: 'get',
+			params: {
+				id,
+				limit: 50
+			}
+		})
+	},
+
 	//获取音乐详情
 	getMusicDetail(ids) {
 		return axios({
