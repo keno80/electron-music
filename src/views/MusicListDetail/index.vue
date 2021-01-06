@@ -55,8 +55,8 @@
         <a-tab-pane key="1" tab="歌曲列表">
           <music-list-table :data="musicList"/>
         </a-tab-pane>
-        <a-tab-pane key="2" tab="评论">
-
+        <a-tab-pane key="2" :tab="'评论(' + musicListDetail.commentCount + ')' ">
+          <comments :hotComments="comments.hotComments" :normalComments="comments.normalComments" :total="comments.total"/>
         </a-tab-pane>
         <a-tab-pane key="3" tab="收藏者">
 
@@ -76,11 +76,14 @@ import {mapGetters} from 'vuex'
 import lodash from "lodash";
 import dayjs from 'dayjs'
 import musicListTable from "@/views/MusicListDetail/component/musicListTable";
+import Comments from '@/components/Comments'
+import global_api from "@/utils/global_api";
 
 export default {
   name: "index",
   components: {
-    musicListTable
+    musicListTable,
+    Comments
   },
   computed: {
     ...mapGetters([
@@ -100,6 +103,11 @@ export default {
     return {
       ellipsis: true,
       key: '1',
+      comments: {
+        normalComments: [],
+        hotComments: [],
+        total: 0
+      }
     }
   },
   methods: {
@@ -108,6 +116,16 @@ export default {
     },
     keyCB(key) {
       this.key = key
+      if (key === '2') {
+        global_api.getMusicListComments(this.musicListDetail.id).then(res => {
+          if (res.data.code === 200) {
+            this.comments.normalComments = res.data.comments
+            this.comments.hotComments = res.data.hotComments
+            this.comments.total = res.data.total
+          }
+          console.log(res);
+        })
+      }
     }
   },
   created() {
@@ -196,6 +214,7 @@ export default {
 
   .music_list {
     margin-top: 20px;
+    width: 774px;
 
     /deep/ .ant-tabs-bar {
       border-bottom: none;
@@ -205,8 +224,12 @@ export default {
         color: #ec4141;
       }
 
-      .ant-tabs-tab:hover {
-        color: #ec4141;
+      .ant-tabs-tab {
+        padding: 12px 0;
+
+        &:hover {
+          color: #ec4141;
+        }
       }
 
       .ant-tabs-ink-bar {

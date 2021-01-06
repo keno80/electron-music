@@ -19,7 +19,8 @@ import {
 	Slider,
 	Spin,
 	Tabs,
-	Tag
+	Tag,
+	Tooltip
 } from "ant-design-vue";
 
 const antd = {
@@ -45,6 +46,7 @@ const antd = {
 		vue.use(Spin)
 		vue.use(Tabs)
 		vue.use(Tag)
+		vue.use(Tooltip)
 	})
 }
 

@@ -24,6 +24,18 @@ export default {
 		})
 	},
 
+	//获取歌单评论
+	getMusicListComments(id) {
+		return axios({
+			url: `${baseUrl}/comment/playlist`,
+			method: 'get',
+			params: {
+				id,
+				limit: 50
+			}
+		})
+	},
+
 	//获取音乐详情
 	getMusicDetail(ids) {
 		return axios({
