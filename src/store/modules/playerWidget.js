@@ -1,4 +1,5 @@
 import lodash from "lodash";
+import musicList from "@/store/modules/musicList";
 
 const state = {
 	nowPlayMusic: {},  //当前播放的音乐详情
@@ -40,28 +41,8 @@ const mutations = {
 		state.musicList.list.push(music)
 	},
 	//存储多首音乐到正在播放列表  -  来自歌单详情页的操作
-	ADD_MULTI_TO_PLAY_LIST_MUSIC: (state, info) => {
-		console.log(info.musics);
-		//根据type判断是添加到播放列表还是播放全部
-		switch (info.type) {
-			case 'add':
-				//如果是添加到播放列表，先判断当前播放列表是否为空
-				//如果为空，直接将歌单音乐添加到播放列表
-				if (state.musicList.list.length === 0) {
-					state.musicList.list = info.musics
-					//添加到播放列表以后，判断当前的播放模式来自动播放音乐，随机模式与其他模式处理不相同
-					let playIndex = null
-					if (state.playType === 3) {
-						playIndex = Math.floor(Math.random() * state.musicList.list.length)
-					} else {
-						playIndex = 0
-					}
-					state.nowPlayMusicId = state.musicList.list[playIndex].id
-				} else {
-					//如果播放列表不为空，则将歌单歌曲添加到当前播放音乐的后面
-					console.log(lodash.findIndex(state.musicList.list, state.nowPlayMusic));
-				}
-		}
+	ADD_MULTI_TO_PLAY_LIST_MUSIC: (state, musics) => {
+		state.musicList.list = musics
 	},
 	REFRESH_PLAY_STATUS: (state, status) => {
 		state.playStatus = status
@@ -108,8 +89,8 @@ const actions = {
 	addPlayListMusic({commit}, music) {
 		commit('ADD_PLAY_LIST_MUSIC', music)
 	},
-	addMultiToPlayListMusic({commit}, info) {
-		commit('ADD_MULTI_TO_PLAY_LIST_MUSIC', info)
+	addMultiToPlayListMusic({commit}, musics) {
+		commit('ADD_MULTI_TO_PLAY_LIST_MUSIC', musics)
 	},
 	refreshPlayStatus({commit}, status) {
 		commit('REFRESH_PLAY_STATUS', status)
