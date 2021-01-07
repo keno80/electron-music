@@ -82,6 +82,7 @@ export default {
   methods: {
     cleanPlayList() {
       this.$store.dispatch('playerWidget/cleanPlayList')
+      this.$store.dispatch('musicList/cleanPlayListState')
     },
     //播放列表双击事件
     playListDoubleClick(info, index) {
