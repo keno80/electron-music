@@ -9,6 +9,7 @@ const getters = {
 	list: state => state.playerWidget.musicList.list,
 	listStatus: state => state.playerWidget.musicList.listStatus,
 	playStatus: state => state.playerWidget.playStatus,
+	playType: state => state.playerWidget.playType,
 	detailStatus: state => state.playerWidget.musicDetail.status,
 	lyric: state => state.playerWidget.Lyric,
 	lyricIndex: state => state.playerWidget.LyricIndex,
@@ -18,7 +19,8 @@ const getters = {
 
 	//歌单
 	musicListDetail: state => state.musicList.detail,
-	musicList: state => state.musicList.songs
+	musicList: state => state.musicList.songs,
+	musicListIds: state => state.musicList.musicListIds
 }
 
 export default getters
