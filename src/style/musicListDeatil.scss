@@ -39,6 +39,19 @@
       .options {
         margin-top: 10px;
 
+        .group_style {
+          margin-right: 1.4px!important;
+          padding-right: 0;
+          border-top-left-radius: 32px;
+          border-bottom-left-radius: 32px;
+        }
+
+        .group_plus {
+          border-top-right-radius: 32px;
+          border-bottom-right-radius: 32px;
+          border-left: 1px solid #49bdc1;
+        }
+
         .ant-btn-primary {
           background-color: #ec4141;
           border-color: #ec4141;

@@ -164,7 +164,6 @@ export default {
     //获取音乐地址
     getMusic(id) {
       //检查音乐是否可用
-      let info = {}
       global_api.checkMusicAvailable(id).then(res => {
         if (res.data.success === true) {
           this.musicAvailable = true
@@ -174,17 +173,12 @@ export default {
             if (res.data.code === 200) {
               //存储到正在播放
               this.$store.dispatch('playerWidget/nowPlayMusic', res.data.songs[0])
-              info = res.data.songs[0]
-              //判断当前音乐再播放列表是否存在，不存在则存储
-              if (lodash.findIndex(this.list, res.data.songs[0]) === -1) {
-                this.$store.dispatch('playerWidget/addPlayListMusic', res.data.songs[0])
-              }
             }
           })
 
           //获取音乐播放地址
           global_api.getMusicUrl(id).then(res => {
-            console.log(res);
+            // console.log(res);
             if (res.data.code === 200) {
               this.songUrl = res.data.data[0].url
               this.getLyric(id)
@@ -192,12 +186,14 @@ export default {
               this.audioInit()
             }
           })
+
+          //判断当前音乐再播放列表是否存在，不存在则存储
+          if (lodash.findIndex(this.list, this.nowPlayMusic) === -1) {
+            this.$store.dispatch('playerWidget/addPlayListMusic', this.nowPlayMusic)
+          }
         } else {
           this.musicAvailable = false
         }
-      })
-      ipcRenderer.send('playMusic', () => {
-        console.log('send');
       })
     },
     //获取歌词
@@ -333,6 +329,7 @@ export default {
           this.playType = 0
           break
       }
+      this.$store.dispatch('playerWidget/savePlayType', this.playType)
     },
     //上一曲 - pre  下一曲 - next
     previousAndNext(type) {
@@ -552,6 +549,8 @@ export default {
     width: 420px;
 
     .ant-drawer-wrapper-body {
+      overflow-x: hidden;
+
       .ant-drawer-header {
         text-align: center;
         border: none;

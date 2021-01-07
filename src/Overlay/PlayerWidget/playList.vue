@@ -1,7 +1,7 @@
 <template>
   <div class="play_list_content">
     <div class="pl_title">
-      <p>总33首</p>
+      <p>共 {{ list.length }} 首</p>
       <div>
         <a>
           <a-icon type="folder-add" class="icon_class"/>

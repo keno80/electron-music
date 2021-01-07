@@ -15,10 +15,15 @@
           </a>
         </div>
         <div class="options">
-          <a-button type="primary" shape="round">
-            <a-icon type="caret-right"/>
-            播放全部
-          </a-button>
+          <a-button-group>
+            <a-button type="primary" class="group_style" @click="playAll()">
+              <a-icon type="caret-right"/>
+              播放全部
+            </a-button>
+            <a-button type="primary" class="group_plus" @click="addToPlayList">
+              <a-icon type="plus"/>
+            </a-button>
+          </a-button-group>
           <a-button type="primary" shape="round">
             <a-icon type="star"/>
             收藏({{ musicListDetail.subscribedCount | countFormat }})
@@ -115,6 +120,12 @@ export default {
     }
   },
   methods: {
+    playAll() {
+
+    },
+    addToPlayList() {
+      this.$store.dispatch('playerWidget/addMultiToPlayListMusic', {type: 'add', musics: this.musicList})
+    },
     showEllipsis() {
       this.ellipsis = !this.ellipsis
     },
@@ -127,7 +138,6 @@ export default {
             this.comments.hotComments = res.data.hotComments
             this.comments.total = res.data.total
           }
-          console.log(res);
         })
       }
 
@@ -136,13 +146,11 @@ export default {
           if (res.data.code === 200) {
             this.subscribers = res.data.subscribers
           }
-          console.log(res);
         })
       }
     }
   },
   created() {
-    console.log(this.musicListDetail);
     console.log(this.musicList);
   }
 }
