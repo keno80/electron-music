@@ -1,3 +1,5 @@
+import lodash from "lodash";
+
 //歌曲的秒转字符串
 export function timeToString(param) {
 	param = parseInt(param)
@@ -34,11 +36,19 @@ export function TimeToSeconds(time) {
 //不含小数点的歌曲时长处理
 export function numberToTime(param) {
 	let time = ''
-	if (param.toString().length  === 6) {
+	if (param.toString().length === 6) {
 		time = param.toString().slice(0, 3) + '.' + param.toString().slice(3)
 	} else if (param.toString().length === 5) {
 		time = param.toString().slice(0, 2) + '.' + param.toString().slice(2)
 	}
 
 	return timeToString(time)
+}
+
+//歌单播放列表处理
+export function concatPlayListAndMusicList(playList, musicList, index) {
+	let pf = lodash.slice(playList, 0, index + 1)
+	let pb = lodash.slice(playList, index + 1)
+
+	return pf.concat(musicList).concat(pb)
 }
