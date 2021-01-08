@@ -16,11 +16,11 @@
         </div>
         <div class="options">
           <a-button-group>
-            <a-button type="primary" class="group_style" @click="playAll()">
+            <a-button type="primary" class="group_style" @click="addOrPlay('play')">
               <a-icon type="caret-right"/>
               播放全部
             </a-button>
-            <a-button type="primary" class="group_plus" @click="addToPlayList">
+            <a-button type="primary" class="group_plus" @click="addOrPlay('add')">
               <a-icon type="plus"/>
             </a-button>
           </a-button-group>
@@ -96,7 +96,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'list',
+      'playList',
       'nowPlayMusic',
       'musicList',
       'musicListDetail',
@@ -126,33 +126,60 @@ export default {
   },
   methods: {
     playAll() {
+      this.$store.dispatch('playerWidget/cleanPlayList')
+      this.$store.dispatch('musicList/cleanPlayListState')
 
     },
-    addToPlayList() {
+    addOrPlay(type) {
       //如果是添加到播放列表，先判断当前播放列表是否为空
-      //如果为空，直接将歌单音乐添加到播放列表
-      if (this.list.length === 0) {
-        this.$store.dispatch('playerWidget/addMultiToPlayListMusic', this.musicList)
-        this.$store.dispatch('musicList/saveMusicListIds', this.musicListDetail.id)
-        //添加到播放列表以后，判断当前的播放模式来自动播放音乐，随机模式与其他模式处理不相同
-        let playIndex = null
-        if (this.playType === 3) {
-          playIndex = Math.floor(Math.random() * this.list.length)
+      if (type === 'add') {
+        console.log('add');
+        //如果为空，直接将歌单音乐添加到播放列表
+        if (this.list.length === 0) {
+          this.$store.dispatch('playerWidget/addMultiToPlayListMusic', this.musicList)
+          this.$store.dispatch('musicList/saveMusicListIds', this.musicListDetail.id)
+          this.emptyListFunction()
         } else {
-          playIndex = 0
-        }
-        this.$store.dispatch('playerWidget/nowPlayMusicId', this.list[playIndex].id)
-      } else {
-        //如果播放列表不为空，则先判断当前歌单的id是否存在于存储的id中，存在则不进行操作
-        //不存在的话则将歌曲插入正在播放的歌曲后面
-        if (this.musicListIds.indexOf(this.musicListDetail.id) === -1) {
-          //获取当前播放的音乐所在播放列表的index
-          let index = lodash.findIndex(this.list, this.nowPlayMusic)
-          let newPlayList = concatPlayListAndMusicList(this.list, this.musicList, index)
+          //如果播放列表不为空，则先判断当前歌单的id是否存在于存储的id中，存在则不进行操作
+          //不存在的话则将歌曲插入正在播放的歌曲后面
+          if (this.musicListIds.indexOf(this.musicListDetail.id) === -1) {
+            //获取当前播放的音乐所在播放列表的index
+            let index = lodash.findIndex(this.playList, this.nowPlayMusic)
+            let newPlayList = concatPlayListAndMusicList(this.playList, this.musicList, index)
 
-          this.$store.dispatch('playerWidget/addMultiToPlayListMusic', newPlayList)
+            this.$store.dispatch('playerWidget/addMultiToPlayListMusic', newPlayList)
+          }
+        }
+      } else {
+        console.log('play');
+        if (this.playList.length === 0) {
+          this.$store.dispatch('playerWidget/addMultiToPlayListMusic', this.musicList)
+          this.$store.dispatch('musicList/saveMusicListIds', this.musicListDetail.id)
+          this.emptyListFunction()
+        } else {
+          //如果播放列表不为空，则直接清除播放列表状态与存储的歌单id
+          this.$store.dispatch('musicList/cleanPlayListState')
+          this.$store.dispatch('playerWidget/cleanPlayList')
+          //清除之后，重新存储当前播放的歌单id
+          this.$store.dispatch('musicList/saveMusicListIds', this.musicListDetail.id)
+          setTimeout(() => {
+            //将当前歌单的歌曲赋值给正在播放列表
+            this.$store.dispatch('playerWidget/addMultiToPlayListMusic', this.musicList)
+            this.emptyListFunction()
+          }, 100)
         }
       }
+    },
+    //当播放列表为空时的操作，同时适用于添加和播放全部
+    emptyListFunction() {
+      //添加到播放列表以后，判断当前的播放模式来自动播放音乐，随机模式与其他模式处理不相同
+      let playIndex = null
+      if (this.playType === 3) {
+        playIndex = Math.floor(Math.random() * this.playList.length)
+      } else {
+        playIndex = 0
+      }
+      this.$store.dispatch('playerWidget/nowPlayMusicId', this.playList[playIndex].id)
     },
     showEllipsis() {
       this.ellipsis = !this.ellipsis
@@ -177,9 +204,6 @@ export default {
         })
       }
     }
-  },
-  created() {
-    console.log(this.musicList);
   }
 }
 </script>
