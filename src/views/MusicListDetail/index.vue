@@ -133,9 +133,8 @@ export default {
     addOrPlay(type) {
       //如果是添加到播放列表，先判断当前播放列表是否为空
       if (type === 'add') {
-        console.log('add');
         //如果为空，直接将歌单音乐添加到播放列表
-        if (this.list.length === 0) {
+        if (this.playList.length === 0) {
           this.$store.dispatch('playerWidget/addMultiToPlayListMusic', this.musicList)
           this.$store.dispatch('musicList/saveMusicListIds', this.musicListDetail.id)
           this.emptyListFunction()
@@ -151,7 +150,6 @@ export default {
           }
         }
       } else {
-        console.log('play');
         if (this.playList.length === 0) {
           this.$store.dispatch('playerWidget/addMultiToPlayListMusic', this.musicList)
           this.$store.dispatch('musicList/saveMusicListIds', this.musicListDetail.id)

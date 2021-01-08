@@ -173,6 +173,13 @@ export default {
             if (res.data.code === 200) {
               //存储到正在播放
               this.$store.dispatch('playerWidget/nowPlayMusic', res.data.songs[0])
+              //判断当前音乐再播放列表是否存在，不存在则存储
+              setTimeout(() => {
+                if (lodash.findIndex(this.playList, res.data.songs[0]) === -1) {
+                  this.$store.dispatch('playerWidget/addPlayListMusic', res.data.songs[0])
+                }
+              }, 100)
+
             }
           })
 
@@ -186,11 +193,6 @@ export default {
               this.audioInit()
             }
           })
-
-          //判断当前音乐再播放列表是否存在，不存在则存储
-          if (lodash.findIndex(this.playList, this.nowPlayMusic) === -1) {
-            this.$store.dispatch('playerWidget/addPlayListMusic', this.nowPlayMusic)
-          }
         } else {
           this.musicAvailable = false
         }
