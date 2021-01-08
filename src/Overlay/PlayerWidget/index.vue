@@ -164,22 +164,26 @@ export default {
     //获取音乐地址
     getMusic(id) {
       //检查音乐是否可用
+      let musicInfo = {}
+
       global_api.checkMusicAvailable(id).then(res => {
         if (res.data.success === true) {
           this.musicAvailable = true
 
+
           //获取音乐详情
           global_api.getMusicDetail(id).then(res => {
             if (res.data.code === 200) {
+              musicInfo = res.data.songs[0]
               //存储到正在播放
-              this.$store.dispatch('playerWidget/nowPlayMusic', res.data.songs[0])
-              //判断当前音乐再播放列表是否存在，不存在则存储
-              setTimeout(() => {
-                if (lodash.findIndex(this.playList, res.data.songs[0]) === -1) {
-                  this.$store.dispatch('playerWidget/addPlayListMusic', res.data.songs[0])
-                }
-              }, 100)
+              this.$store.dispatch('playerWidget/nowPlayMusic', musicInfo)
 
+              //判断当前音乐再播放列表是否存在，不存在则存储，顺便增加uid(用于播放列表)
+              setTimeout(() => {
+                if (lodash.findIndex(this.playList, musicInfo) === -1) {
+                  this.$store.dispatch('playerWidget/addPlayListMusic', musicInfo)
+                }
+              }, 400)
             }
           })
 
