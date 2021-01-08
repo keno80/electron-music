@@ -58,7 +58,7 @@
     <div class="music_list">
       <a-tabs :active-key="key" @change="keyCB">
         <a-tab-pane key="1" tab="歌曲列表">
-          <music-list-table :data="musicList"/>
+          <music-list-table :data="musicList" @rowDbClick="rowDbClick"/>
         </a-tab-pane>
         <a-tab-pane key="2" :tab="'评论(' + musicListDetail.commentCount + ')' ">
           <comments :hotComments="comments.hotComments" :normalComments="comments.normalComments"
@@ -178,6 +178,16 @@ export default {
         playIndex = 0
       }
       this.$store.dispatch('playerWidget/nowPlayMusicId', this.playList[playIndex].id)
+    },
+    //音乐列表双击事件
+    rowDbClick(id) {
+      if (this.playList.length === 0) {
+        this.$store.dispatch('playerWidget/addMultiToPlayListMusic', this.musicList)
+        this.$store.dispatch('musicList/saveMusicListIds', this.musicListDetail.id)
+        this.$store.dispatch('playerWidget/nowPlayMusicId', id)
+      } else {
+        this.$store.dispatch('playerWidget/nowPlayMusicId', id)
+      }
     },
     showEllipsis() {
       this.ellipsis = !this.ellipsis

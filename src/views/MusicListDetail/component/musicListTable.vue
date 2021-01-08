@@ -1,5 +1,5 @@
 <template>
-  <el-table stripe :data="data">
+  <el-table stripe :data="data" @row-dblclick="dbcPlayMusic">
     <el-table-column type="index" width="50px" align="center"></el-table-column>
     <el-table-column width="50px" align="center">
       <template slot-scope="{row}">
@@ -48,7 +48,9 @@ export default {
     }
   },
   methods: {
-
+    dbcPlayMusic(row) {
+      this.$emit('rowDbClick', row.id)
+    }
   },
 }
 </script>

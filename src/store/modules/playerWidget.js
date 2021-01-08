@@ -1,9 +1,7 @@
-import lodash from "lodash";
-import musicList from "@/store/modules/musicList";
-
 const state = {
 	nowPlayMusic: {},  //当前播放的音乐详情
 	nowPlayMusicId: '',  //当前播放的音乐ID  -  音乐详情将通过id获得
+	nowPlayUid: '',  //当前播放音乐的UID   -   用于播放列表
 	Lyric: [],
 	LyricIndex: 0,
 	playList: {

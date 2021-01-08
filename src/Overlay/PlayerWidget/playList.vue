@@ -24,11 +24,11 @@
       </a-empty>
       <a-list bordered :data-source="playList" v-else>
         <a-list-item slot="renderItem" slot-scope="item, index">
-          <div class="music_content" :class="[nowPlayId === item.id ? active : '']"
+          <div class="music_content" :class="[nowPlayMusicId === item.id ? active : '']"
                @dblclick="playListDoubleClick(item, index)">
             <div class="name_content">
-              <template v-if="nowPlayId === item.id">
-                <a-icon type="caret-right" v-if="playStatus && nowPlayId === item.id"/>
+              <template v-if="nowPlayMusicId === item.id">
+                <a-icon type="caret-right" v-if="playStatus && nowPlayMusicId === item.id"/>
                 <a-icon type="pause" v-else/>
               </template>
               <span v-else style="margin-left: 14px"></span>
@@ -62,12 +62,10 @@ export default {
     ...mapGetters([
       'playList',
       'nowPlayMusic',
+      'nowPlayMusicId',
+      'nowPlayUid',
       'playStatus'
     ]),
-    //用于突出显示正在播放的音乐
-    nowPlayId() {
-      return this.nowPlayMusic.id
-    }
   },
   filters: {
     musicDuration(val) {
@@ -86,8 +84,9 @@ export default {
     },
     //播放列表双击事件
     playListDoubleClick(info, index) {
+      console.log(info);
       //先判断当前双击的歌曲是不是正在播放
-      if (info.id === this.nowPlayMusic.id) {
+      if (info.id === this.nowPlayMusicId) {
         if (!this.playStatus) {
           this.$store.dispatch('playerWidget/refreshPlayStatus', true)
         }

@@ -6,6 +6,7 @@ const getters = {
 	//底部播放控件
 	nowPlayMusicId: state => state.playerWidget.nowPlayMusicId,
 	nowPlayMusic: state => state.playerWidget.nowPlayMusic,
+	nowPlayUid: state => state.playerWidget.nowPlayUid,
 	playList: state => state.playerWidget.playList.list,
 	listStatus: state => state.playerWidget.playList.listStatus,
 	playStatus: state => state.playerWidget.playStatus,
