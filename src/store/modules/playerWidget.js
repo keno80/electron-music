@@ -6,7 +6,7 @@ const state = {
 	nowPlayMusicId: '',  //当前播放的音乐ID  -  音乐详情将通过id获得
 	Lyric: [],
 	LyricIndex: 0,
-	musicList: {
+	playList: {
 		listStatus: false,
 		list: []
 	},
@@ -31,18 +31,18 @@ const mutations = {
 		state.LyricIndex = index
 	},
 	OPEN_MUSIC_LIST: (state) => {
-		state.musicList.listStatus = true
+		state.playList.listStatus = true
 	},
 	CLOSE_MUSIC_LIST: (state) => {
-		state.musicList.listStatus = false
+		state.playList.listStatus = false
 	},
 	//存储单首音乐到正在播放列表
 	ADD_PLAY_LIST_MUSIC: (state, music) => {
-		state.musicList.list.push(music)
+		state.playList.list.push(music)
 	},
 	//存储多首音乐到正在播放列表  -  来自歌单详情页的操作
 	ADD_MULTI_TO_PLAY_LIST_MUSIC: (state, musics) => {
-		state.musicList.list = musics
+		state.playList.list = musics
 	},
 	REFRESH_PLAY_STATUS: (state, status) => {
 		state.playStatus = status
@@ -57,7 +57,7 @@ const mutations = {
 	CLEAN_PLAY_LIST: (state) => {
 		state.nowPlayMusic = {}
 		state.nowPlayMusicId = ''
-		state.musicList.list = []
+		state.playList.list = []
 		state.playStatus = false
 		state.musicDetail.status = false
 

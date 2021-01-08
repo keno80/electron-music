@@ -111,7 +111,7 @@ export default {
     ...mapGetters([
       'nowPlayMusic',
       'listStatus',
-      'list',
+      'playList',
       'playStatus',
       'detailStatus'
     ]),
@@ -126,7 +126,7 @@ export default {
       }
 
     },
-    '$store.state.playerWidget.musicList.list': function (newVal) {
+    '$store.state.playerWidget.playList.list': function (newVal) {
       if (!validArray(newVal)) {
         this.songUrl = ''
         this.currentTime = '00:00'
@@ -188,7 +188,7 @@ export default {
           })
 
           //判断当前音乐再播放列表是否存在，不存在则存储
-          if (lodash.findIndex(this.list, this.nowPlayMusic) === -1) {
+          if (lodash.findIndex(this.playList, this.nowPlayMusic) === -1) {
             this.$store.dispatch('playerWidget/addPlayListMusic', this.nowPlayMusic)
           }
         } else {
@@ -281,29 +281,29 @@ export default {
 
       audio.addEventListener('ended', () => {
         this.$store.dispatch('playerWidget/refreshPlayStatus', false)
-        let playIndex = lodash.findIndex(this.list, this.nowPlayMusic)
+        let playIndex = lodash.findIndex(this.playList, this.nowPlayMusic)
         switch (this.playType) {
           case 0: //顺序播放
-            playIndex + 1 >= this.list.length ? console.log('播放完毕') : playIndex + 1
+            playIndex + 1 >= this.playList.length ? console.log('播放完毕') : playIndex + 1
             break
           case 1: //列表循环
-            this.list.length === 1 ? this.getMusic(this.list[playIndex].id) : playIndex = playIndex + 1 >= this.list.length ? 0 : playIndex + 1
+            this.playList.length === 1 ? this.getMusic(this.playList[playIndex].id) : playIndex = playIndex + 1 >= this.playList.length ? 0 : playIndex + 1
             break
           case 2: //单曲循环
-            this.getMusic(this.list[playIndex].id)
+            this.getMusic(this.playList[playIndex].id)
             break
           case 3: //随机
-            playIndex = Math.floor(Math.random() * this.list.length)
+            playIndex = Math.floor(Math.random() * this.playList.length)
             break
         }
-        this.$store.dispatch('playerWidget/nowPlayMusicId', this.list[playIndex].id)
+        this.$store.dispatch('playerWidget/nowPlayMusicId', this.playList[playIndex].id)
       })
     },
     //播放，暂停
     play() {
       let audio = this.$refs.audio
       //播放前先检查播放列表有无音乐
-      if (this.list.length !== 0) {
+      if (this.playList.length !== 0) {
         if (this.playStatus) {
           this.$store.dispatch('playerWidget/refreshPlayStatus', false)
           audio.pause()
@@ -334,23 +334,22 @@ export default {
     //上一曲 - pre  下一曲 - next
     previousAndNext(type) {
       //先判断当前播放列表是否只有一首歌曲，如只有一首，则不执行操作
-      if (this.list.length > 1) {
+      if (this.playList.length > 1) {
         //如不止一首，则先获取该首歌曲在播放列表中的index
-        let playIndex = lodash.findIndex(this.list, this.nowPlayMusic)
-
+        let playIndex = lodash.findIndex(this.playList, this.nowPlayMusic)
         switch (this.playType) {
           case 3:
-            playIndex = Math.floor(Math.random() * this.list.length)
+            playIndex = Math.floor(Math.random() * this.playList.length)
             break
           default:
             if (type === 'pre') {
-              playIndex - 1 >= 0 ? playIndex-- : playIndex = this.list.length - 1
+              playIndex - 1 >= 0 ? playIndex-- : playIndex = this.playList.length - 1
             } else if (type === 'next') {
-              playIndex + 1 >= this.list.length ? playIndex = 0 : playIndex++
+              playIndex + 1 >= this.playList.length ? playIndex = 0 : playIndex++
             }
             break
         }
-        this.$store.dispatch('playerWidget/nowPlayMusicId', this.list[playIndex].id)
+        this.$store.dispatch('playerWidget/nowPlayMusicId', this.playList[playIndex].id)
       }
     },
     //拖动进度条改变播放进度

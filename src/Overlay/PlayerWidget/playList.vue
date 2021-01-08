@@ -1,7 +1,7 @@
 <template>
   <div class="play_list_content">
     <div class="pl_title">
-      <p>共 {{ list.length }} 首</p>
+      <p>共 {{ playList.length }} 首</p>
       <div>
         <a>
           <a-icon type="folder-add" class="icon_class"/>
@@ -19,10 +19,10 @@
     <div class="pl_list">
       <a-empty
         image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
-        :image-style="{height: '60px'}" v-if="list.length <= 0">
+        :image-style="{height: '60px'}" v-if="playList.length <= 0">
         <span slot="description">播放列表还没有音乐哦~</span>
       </a-empty>
-      <a-list bordered :data-source="list" v-else>
+      <a-list bordered :data-source="playList" v-else>
         <a-list-item slot="renderItem" slot-scope="item, index">
           <div class="music_content" :class="[nowPlayId === item.id ? active : '']"
                @dblclick="playListDoubleClick(item, index)">
@@ -60,7 +60,7 @@ export default {
   name: "playList",
   computed: {
     ...mapGetters([
-      'list',
+      'playList',
       'nowPlayMusic',
       'playStatus'
     ]),
@@ -93,7 +93,7 @@ export default {
         }
       } else {
         //如果不是当前播放的歌曲，将播放双击的歌曲
-        let id = this.list[index].id
+        let id = this.playList[index].id
         this.$store.dispatch('playerWidget/nowPlayMusicId', id)
       }
     }
