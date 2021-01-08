@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from "@/store/getters";
 
+import app from "@/store/modules/app";
 import navigation from "@/store/modules/navigation";
 import playerWidget from "@/store/modules/playerWidget";
 import headSearch from "@/store/modules/headSearch";
@@ -17,6 +18,7 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
+    app,
     navigation,
     playerWidget,
     headSearch,

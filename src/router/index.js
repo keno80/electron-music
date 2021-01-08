@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Overlay from '@/Overlay/index'
+import {scrollTo} from "@/utils/scroll-to";
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -32,7 +34,7 @@ const routes = [
 			{
 				path: 'music_list',
 				name: 'music_list',
-					component: () => import('@/views/MusicListDetail/index'),
+				component: () => import('@/views/MusicListDetail/index'),
 				meta: {title: '歌单详情'},
 				hidden: true
 			},
@@ -51,6 +53,17 @@ const router = new VueRouter({
 	mode: 'hash',
 	base: process.env.BASE_URL,
 	routes
+})
+
+router.beforeEach((to, from, next) => {
+	store.dispatch('app/reShowScrollBar')
+	setTimeout(() => {
+		store.dispatch('app/reShowScrollBar')
+	}, 200)
+
+
+	scrollTo(0, 800)
+	next()
 })
 
 export default router

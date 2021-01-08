@@ -38,8 +38,12 @@ export default {
 
   /deep/ .ant-layout-content {
     display: flex;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 137px);
     min-width: 822px;
+
+    .ant-layout {
+      background: #ffffff;
+    }
   }
 }
 </style>

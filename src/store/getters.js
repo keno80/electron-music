@@ -3,6 +3,9 @@ const getters = {
 	backNum: state => state.navigation.backNum,
 	forwardNum: state => state.navigation.forwardNum,
 
+	//应用
+	scrollBar: state => state.app.scrollBar,
+
 	//底部播放控件
 	nowPlayMusicId: state => state.playerWidget.nowPlayMusicId,
 	nowPlayMusic: state => state.playerWidget.nowPlayMusic,

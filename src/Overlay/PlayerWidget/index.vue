@@ -251,9 +251,9 @@ export default {
     },
     //显示桌面歌词
     showLyric() {
-      createDeskLyricWindow()
+      // createDeskLyricWindow()
       // ipcRenderer.send('closeDesk')
-      localStorage.setItem('lyricFloating', JSON.stringify(this.lyric))
+      // localStorage.setItem('lyricFloating', JSON.stringify(this.lyric))
 
 
     },
