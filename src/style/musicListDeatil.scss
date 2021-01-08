@@ -40,7 +40,7 @@
         margin-top: 10px;
 
         .group_style {
-          margin-right: 1.4px!important;
+          margin-right: 1.4px !important;
           padding-right: 0;
           border-top-left-radius: 32px;
           border-bottom-left-radius: 32px;
@@ -90,6 +90,12 @@
   .music_list {
     margin-top: 20px;
     width: 774px;
+
+    .spin {
+      width: 100%;
+      text-align: center;
+      padding: 40px 10px;
+    }
 
     /deep/ .ant-tabs-bar {
       border-bottom: none;

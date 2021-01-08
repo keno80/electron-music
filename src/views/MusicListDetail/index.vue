@@ -58,7 +58,13 @@
     <div class="music_list">
       <a-tabs :active-key="key" @change="keyCB">
         <a-tab-pane key="1" tab="歌曲列表">
-          <music-list-table :data="musicList" @rowDbClick="rowDbClick"/>
+          <music-list-table :data="musicList" @rowDbClick="rowDbClick" v-if="musicList.length !== 0"/>
+          <div class="spin" v-else>
+            <a-spin tip="请稍后...">
+              <a-icon slot="indicator" type="loading" style="font-size: 24px" spin/>
+            </a-spin>
+          </div>
+
         </a-tab-pane>
         <a-tab-pane key="2" :tab="'评论(' + musicListDetail.commentCount + ')' ">
           <comments :hotComments="comments.hotComments" :normalComments="comments.normalComments"

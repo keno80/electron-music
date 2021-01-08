@@ -40,6 +40,8 @@ export default {
       global_api.getMusicListDetail(id).then(res => {
         if (res.data.code === 200) {
           this.$store.dispatch('musicList/saveMusicListDetail', res.data.playlist)
+          this.$store.dispatch('musicList/saveMusicListSongs', [])
+          this.$router.push('/music_list')
 
           let arr = []
           for (let item of res.data.playlist.trackIds) {
@@ -48,7 +50,6 @@ export default {
           global_api.getMusicDetail(arr.join(',')).then(res => {
             if (res.data.code === 200) {
               this.$store.dispatch('musicList/saveMusicListSongs', res.data.songs)
-              this.$router.push('/music_list')
             }
           })
         }
