@@ -5,7 +5,7 @@
         <tab1-recommend />
       </a-tab-pane>
       <a-tab-pane key="2" tab="歌单">
-        Content of Tab Pane 2
+        <tab2-music-list />
       </a-tab-pane>
       <a-tab-pane key="3" tab="主播电台">
         Content of Tab Pane 3
@@ -24,12 +24,13 @@
 </template>
 
 <script>
-import {Tab1Recommend} from "@/views/Discover/components";
+import {Tab1Recommend, Tab2MusicList} from "@/views/Discover/components";
 
 export default {
   name: "index",
   components: {
-    Tab1Recommend
+    Tab1Recommend,
+    Tab2MusicList
   },
   methods: {
     callback() {
