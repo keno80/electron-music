@@ -12,7 +12,7 @@
         <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true" />
       </a-spin>
     </div>
-    <song-list :songList="songList" v-else/>
+    <music-list :songList="songList" v-else/>
 
     <div class="new_song_spin common_style" v-if="!newSongReady">
       <a-spin tip="推荐新歌加载中...">
@@ -25,15 +25,15 @@
 
 <script>
 import Carousel from './Carousel'
-import SongList from './SongList'
 import NewSong from './NewSong'
+import MusicList from '@/components/MusicList'
 import api from "@/views/Discover/api";
 
 export default {
   name: "index",
   components: {
     Carousel,
-    SongList,
+    MusicList,
     NewSong
   },
   data() {
