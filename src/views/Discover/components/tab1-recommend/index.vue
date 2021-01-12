@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div style="width: 774px">
     <div class="carousel_spin common_style" v-if="!bannerReady">
       <a-spin tip="Banner加载中...">
         <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true" />
       </a-spin>
     </div>
-    <carousel :recommend="recommendBanner" v-else/>
+    <carousel :banner="recommendBanner" type="'recommend'" v-else/>
 
     <div class="song_list_spin common_style" v-if="!songListReady">
       <a-spin tip="推荐歌单加载中...">
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import Carousel from './Carousel'
+import Carousel from '@/components/Carousel'
 import NewSong from './NewSong'
 import MusicList from '@/components/MusicList'
 import api from "@/views/Discover/api";
