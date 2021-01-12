@@ -73,5 +73,29 @@ export default {
 				limit
 			}
 		})
+	},
+
+	//电台banner
+	djBanner() {
+		return axios({
+			url: `${baseUrl}/dj/banner`,
+			method: 'get'
+		})
+	},
+
+	//电台分类
+	djCategory() {
+		return axios({
+			url: `${baseUrl}/dj/catelist`,
+			method: 'get'
+		})
+	},
+
+	//电台个性推荐
+	djRecommend() {
+		return axios({
+			url: `${baseUrl}/dj/personalize/recommend?limit=5`,
+			method: 'get'
+		})
 	}
 }
