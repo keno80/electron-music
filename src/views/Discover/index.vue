@@ -9,7 +9,7 @@
         <tab2-music-list v-else/>
       </a-tab-pane>
       <a-tab-pane key="3" tab="主播电台">
-        Content of Tab Pane 3
+        <tab3-d-j />
       </a-tab-pane>
       <a-tab-pane key="4" tab="排行榜">
         Content of Tab Pane 3
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import {Tab1Recommend, Tab2MusicList, HighQualityMusicList} from "@/views/Discover/components";
+import {Tab1Recommend, Tab2MusicList, Tab3DJ, HighQualityMusicList} from "@/views/Discover/components";
 import {mapGetters} from 'vuex'
 
 export default {
@@ -33,6 +33,7 @@ export default {
   components: {
     Tab1Recommend,
     Tab2MusicList,
+    Tab3DJ,
     HighQualityMusicList
   },
   computed: {
