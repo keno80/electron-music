@@ -1,6 +1,6 @@
 <template>
   <div class="music_list_block">
-    <div class="ml_bg">
+    <div class="ml_bg" v-if="showHQBanner">
       <div class="high_quality_music_list_banner"
            :style="{ backgroundImage: 'url('+ highQualityFirst.coverImgUrl +')'}">
         <div :style="{ backgroundImage: 'url('+ highQualityFirst.coverImgUrl +')'}" class="blurImg"/>
@@ -11,16 +11,14 @@
           <img :src="highQualityFirst.coverImgUrl"/>
         </div>
         <div class="description">
-          <a-button shape="round" ghost>
+          <a-button shape="round" ghost @click="toHQMusicList">
             <a-icon type="crown"/>
             精品歌单
           </a-button>
           <p class="name">{{ highQualityFirst.name }}</p>
           <p class="des">{{ highQualityFirst.copywriter }}</p>
         </div>
-
       </div>
-
     </div>
 
     <div class="music_list_category">
@@ -46,37 +44,21 @@
 
     <div class="category_modal" v-if="categoryModal">
       <div class="all">
-        <a>全部歌单</a>
+        <a @click="changeCategory({name: '全部'})" :class="['全部' === cat ? 'active_tag' : '']">全部歌单</a>
       </div>
-        <div class="category">
-          <div class="category_box" v-for="(item, index) in cats" :key="index">
-            <div class="category_name">
-              <a-icon :type="index | iconFilter" style="font-size: 22px;color: #989898"/>
-              <span>{{ item }}</span>
-            </div>
-            <div>
-              <template v-for="(sub, subIndex) in subCats">
-                <span v-if="sub.category.toString() === index">{{sub.name}}</span>
-              </template>
+      <div class="category">
+        <div class="category_box" v-for="(item, index) in cats" :key="index">
+          <div class="category_name">
+            <a-icon :type="index | iconFilter" style="font-size: 22px;color: #989898"/>
+            <span>{{ item }}</span>
+          </div>
+          <div class="sub_category">
+            <div v-for="(sub, subIndex) in subCats" v-if="sub.category.toString() === index" class="sub_tag_div">
+              <a :class="[sub.name === cat ? 'active_tag' : '']" @click="changeCategory(sub)">{{ sub.name }}</a>
             </div>
           </div>
-<!--          <div class="category_name">-->
-<!--            <a-icon type="skin" style="font-size: 22px;color: #989898"/>-->
-<!--            <span>{{ cats[1] }}</span>-->
-<!--          </div>-->
-<!--          <div class="category_name">-->
-<!--            <a-icon type="car" style="font-size: 22px;color: #989898"/>-->
-<!--            <span>{{ cats[2] }}</span>-->
-<!--          </div>-->
-<!--          <div class="category_name">-->
-<!--            <a-icon type="smile" style="font-size: 22px;color: #989898"/>-->
-<!--            <span>{{ cats[3] }}</span>-->
-<!--          </div>-->
-<!--          <div class="category_name">-->
-<!--            <a-icon type="appstore" style="font-size: 22px;color: #989898"/>-->
-<!--            <span>{{ cats[4] }}</span>-->
-<!--          </div>-->
         </div>
+      </div>
     </div>
   </div>
 </template>
@@ -105,6 +87,7 @@ export default {
       highQualityFirst: {},  //精品歌单列表首个歌单信息
       listReady: false,
       categoryModal: false,
+      showHQBanner: false,
     }
   },
   filters: {
@@ -146,17 +129,22 @@ export default {
     },
     changeCategory(item) {
       this.cat = item.name
+      this.categoryModal = false
       this.getMusicList(item.name)
     },
     //检查当前tag是否有精品歌单
     checkHighQuality(index) {
-      if (this.hotCats[index].playlistTag.highQuality === 1) {
+      if (this.hotCats[index] && this.hotCats[index].playlistTag.highQuality === 1) {
+        this.showHQBanner = true
         api.HQMusicList(this.cat, this.limit).then(res => {
           if (res.data.code === 200) {
             this.highQualityFirst = res.data.playlists[0]
             this.highQuality = res.data.playlists
+            this.$store.dispatch('musicList/saveHQMusicList', res.data.playlists)
           }
         })
+      } else {
+        this.showHQBanner = false
       }
     },
     showCategoryModal() {
@@ -167,6 +155,9 @@ export default {
           this.subCats = res.data.sub
         }
       })
+    },
+    toHQMusicList() {
+      this.$store.dispatch('musicList/switchNormalHQ', true)
     }
   }
 }
@@ -244,7 +235,7 @@ export default {
       margin-bottom: 14px;
 
       .ant-btn-round {
-        width: 112px;
+        width: 130px;
 
         &:hover {
           color: #ec4141;
@@ -258,7 +249,7 @@ export default {
       }
 
       .tags {
-        margin-left: 160px;
+        margin-left: 150px;
 
         a {
           font-size: 13px;
@@ -269,12 +260,6 @@ export default {
           &:hover {
             color: #ec4141;
           }
-        }
-
-        .active_tag {
-          color: #ec4141;
-          background: rgba(236, 65, 65, .1);
-          border-radius: 10px;
         }
       }
     }
@@ -289,11 +274,11 @@ export default {
   }
 
   .category_modal {
-    width: 600px;
+    width: 636px;
     background-color: #ffffff;
     position: absolute;
     top: 240px;
-    left: 120px;
+    left: 134px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(76, 76, 76, 0.4);
     font-family: PingFang Thin SC, sans-serif;
@@ -311,8 +296,33 @@ export default {
       padding: 10px 20px;
 
       .category_box {
-        padding: 14px 0;
+        padding: 14px 0 0 0;
         display: flex;
+
+        .category_name {
+          width: 80px;
+        }
+
+        .sub_category {
+          width: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: left;
+          margin-left: 40px;
+
+          .sub_tag_div {
+            width: 98px;
+            margin-bottom: 14px;
+          }
+
+          a {
+            padding: 1px 10px;
+
+            &:hover {
+              color: #ec4141;
+            }
+          }
+        }
 
         span {
           color: #d2d2d2;
@@ -321,6 +331,12 @@ export default {
         }
       }
     }
+  }
+
+  .active_tag {
+    color: #ec4141 !important;
+    background: rgba(236, 65, 65, .1);
+    border-radius: 10px;
   }
 }
 </style>
