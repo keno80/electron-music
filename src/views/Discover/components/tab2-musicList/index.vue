@@ -165,6 +165,8 @@ export default {
 
 <style scoped lang="scss">
 .music_list_block {
+  width: 774px;
+
   .ml_bg {
     overflow: hidden;
     border-radius: 8px;
