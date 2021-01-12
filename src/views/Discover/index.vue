@@ -5,7 +5,8 @@
         <tab1-recommend />
       </a-tab-pane>
       <a-tab-pane key="2" tab="歌单">
-        <tab2-music-list />
+        <high-quality-music-list v-if="normalOrHQ"/>
+        <tab2-music-list v-else/>
       </a-tab-pane>
       <a-tab-pane key="3" tab="主播电台">
         Content of Tab Pane 3
@@ -24,13 +25,20 @@
 </template>
 
 <script>
-import {Tab1Recommend, Tab2MusicList} from "@/views/Discover/components";
+import {Tab1Recommend, Tab2MusicList, HighQualityMusicList} from "@/views/Discover/components";
+import {mapGetters} from 'vuex'
 
 export default {
   name: "index",
   components: {
     Tab1Recommend,
-    Tab2MusicList
+    Tab2MusicList,
+    HighQualityMusicList
+  },
+  computed: {
+    ...mapGetters([
+      'normalOrHQ'
+    ])
   },
   methods: {
     callback() {
