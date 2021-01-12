@@ -24,7 +24,9 @@ const getters = {
 	//歌单
 	musicListDetail: state => state.musicList.detail,
 	musicList: state => state.musicList.songs,
-	musicListIds: state => state.musicList.musicListIds
+	musicListIds: state => state.musicList.musicListIds,
+	HQMusicList: state => state.musicList.HQMusicList,
+	normalOrHQ: state => state.musicList.normalOrHQ
 }
 
 export default getters
