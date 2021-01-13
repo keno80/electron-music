@@ -13,7 +13,7 @@
 
     <div class="block_common">
       <h2>电台个性推荐</h2>
-      <dj-common-grid :data="djRecommend"/>
+      <dj-common-grid :data="djRecommend" @getInfo="getRadioInfo"/>
     </div>
 
     <div class="block_common">
@@ -23,7 +23,7 @@
           <a-icon type="right"/>
         </a>
       </h2>
-      <dj-common-grid :data="type2001"/>
+      <dj-common-grid :data="type2001" @getInfo="getRadioInfo"/>
     </div>
 
     <div class="block_common">
@@ -33,7 +33,7 @@
           <a-icon type="right"/>
         </a>
       </h2>
-      <dj-common-grid :data="type8"/>
+      <dj-common-grid :data="type8" @getInfo="getRadioInfo"/>
     </div>
 
     <div class="block_common">
@@ -53,7 +53,7 @@
           <a-icon type="right"/>
         </a>
       </h2>
-      <dj-common-grid :data="type3001"/>
+      <dj-common-grid :data="type3001" @getInfo="getRadioInfo"/>
     </div>
   </div>
 </template>
@@ -140,6 +140,22 @@ export default {
           this.$store.dispatch('djProgram/saveRadioList', res.data.djRadios)
           this.$router.push({
             path: '/dj_programs_list'
+          })
+        }
+      })
+    },
+    getRadioInfo(id) {
+      api.djDetail(id).then(res => {
+        if (res.data.code === 200) {
+          this.$store.dispatch('app/changeTag', '电台')
+          this.$store.dispatch('djProgram/saveRadioProgramsDetail', res.data.data)
+          this.$router.push('/music_list')
+
+          api.djPrograms(id).then(res => {
+            if (res.data.code === 200) {
+              this.$store.dispatch('djProgram/saveRadioProgramsList', res.data.programs)
+              console.log(res.data.programs);
+            }
           })
         }
       })

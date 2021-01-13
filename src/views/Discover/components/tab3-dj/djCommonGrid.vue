@@ -1,7 +1,7 @@
 <template>
   <div class="grid_common">
     <template v-for="(item, index) in data" v-if="index <5">
-      <a class="grid_item">
+      <a class="grid_item" @click="getInfo(item.id)">
         <img :src="item.picUrl + '?param=140y140'"/>
         <div class="grid_text_block">
           <p>{{ item.name }}</p>
@@ -18,6 +18,11 @@ export default {
   name: "djCommonGrid",
   props: {
     data: Array
+  },
+  methods: {
+    getInfo(id) {
+      this.$emit('getInfo', id)
+    }
   }
 }
 </script>
