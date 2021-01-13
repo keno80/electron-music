@@ -5,6 +5,7 @@ const getters = {
 
 	//应用
 	scrollBar: state => state.app.scrollBar,
+	tabIndex: state => state.app.tabIndex,
 
 	//底部播放控件
 	nowPlayMusicId: state => state.playerWidget.nowPlayMusicId,
@@ -26,7 +27,10 @@ const getters = {
 	musicList: state => state.musicList.songs,
 	musicListIds: state => state.musicList.musicListIds,
 	HQMusicList: state => state.musicList.HQMusicList,
-	normalOrHQ: state => state.musicList.normalOrHQ
+	normalOrHQ: state => state.musicList.normalOrHQ,
+
+	//电台
+	djRadiosList: state => state.djProgram.radiosList
 }
 
 export default getters

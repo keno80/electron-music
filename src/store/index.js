@@ -7,6 +7,7 @@ import navigation from "@/store/modules/navigation";
 import playerWidget from "@/store/modules/playerWidget";
 import headSearch from "@/store/modules/headSearch";
 import musicList from "@/store/modules/musicList";
+import djProgram from "@/store/modules/djProgram";
 
 Vue.use(Vuex)
 
@@ -22,7 +23,8 @@ export default new Vuex.Store({
     navigation,
     playerWidget,
     headSearch,
-    musicList
+    musicList,
+    djProgram
   },
   getters
 })
