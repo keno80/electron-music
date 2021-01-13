@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Overlay from '@/Overlay/index'
-import {scrollTo} from "@/utils/scroll-to";
 import store from '@/store'
 
 Vue.use(VueRouter)
@@ -38,6 +37,13 @@ const routes = [
 				meta: {title: '歌单详情'},
 				hidden: true
 			},
+			{
+				path: 'dj_programs_list',
+				name: 'dj_programs_list',
+				component: () => import('@/views/Discover/components/tab3-dj/djProgramsList'),
+				meta: {title: '电台节目列表'},
+				hidden: true
+			},
 		]
 	},
 	{
@@ -61,8 +67,6 @@ router.beforeEach((to, from, next) => {
 		store.dispatch('app/reShowScrollBar')
 	}, 200)
 
-
-	scrollTo(0, 800)
 	next()
 })
 
