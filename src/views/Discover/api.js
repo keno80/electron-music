@@ -108,5 +108,16 @@ export default {
 				type
 			}
 		})
+	},
+
+	//类别热门电台
+	djTypeHot(cateId) {
+		return axios({
+			url: `${baseUrl}/dj/radio/hot`,
+			method: 'get',
+			params: {
+				cateId
+			}
+		})
 	}
 }
