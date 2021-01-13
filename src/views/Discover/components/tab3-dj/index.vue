@@ -11,9 +11,29 @@
       </template>
     </div>
 
-    <div class="dj_personalize_recommend">
+    <div class="block_common">
       <h2>电台个性推荐</h2>
       <dj-common-grid :data="djRecommend"/>
+    </div>
+
+    <div class="block_common">
+      <h2><a>创作翻唱 <a-icon type="right" /></a></h2>
+      <dj-common-grid :data="type2001"/>
+    </div>
+
+    <div class="block_common">
+      <h2><a>脱口秀 <a-icon type="right" /></a></h2>
+      <dj-common-grid :data="type8"/>
+    </div>
+
+    <div class="block_common">
+      <h2><a>音乐故事 <a-icon type="right" /></a></h2>
+      <dj-common-grid :data="type2"/>
+    </div>
+
+    <div class="block_common">
+      <h2><a>声音恋人 <a-icon type="right" /></a></h2>
+      <dj-common-grid :data="type3001"/>
     </div>
   </div>
 </template>
@@ -33,7 +53,11 @@ export default {
     return {
       djBanner: [],
       djCategory: [],
-      djRecommend: []
+      djRecommend: [],
+      type2001: [],  //创作翻唱
+      type8: [],  //脱口秀
+      type2: [],  //音乐故事
+      type3001: [],  //声音恋人
     }
   },
   created() {
@@ -41,21 +65,53 @@ export default {
   },
   methods: {
     fetchData() {
+      //banner
       api.djBanner().then(res => {
         if (res.data.code === 200) {
           this.djBanner = res.data.data
         }
       })
 
+      //分类
       api.djCategory().then(res => {
         if (res.data.code === 200) {
           this.djCategory = res.data.categories
         }
       })
 
+      //个性推荐
       api.djRecommend().then(res => {
         if (res.data.code === 200) {
           this.djRecommend = res.data.data
+        }
+      })
+
+      //分类推荐  -  创作翻唱  -  2001
+      api.djTypeRecommend(2001).then(res => {
+        if (res.data.code === 200) {
+          this.type2001 = res.data.djRadios
+          console.log(this.type2001);
+        }
+      })
+
+      //分类推荐  -  创作翻唱  -  8
+      api.djTypeRecommend(8).then(res => {
+        if (res.data.code === 200) {
+          this.type8 = res.data.djRadios
+        }
+      })
+
+      //分类推荐  -  创作翻唱  -  2
+      api.djTypeRecommend(2).then(res => {
+        if (res.data.code === 200) {
+          this.type2 = res.data.djRadios
+        }
+      })
+
+      //分类推荐  -  创作翻唱  -  3001
+      api.djTypeRecommend(3001).then(res => {
+        if (res.data.code === 200) {
+          this.type3001 = res.data.djRadios
         }
       })
     }
@@ -71,6 +127,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin-bottom: 26px;
 
     .dj_category_block {
       text-align: center;
@@ -94,12 +151,20 @@ export default {
     }
   }
 
-  .dj_personalize_recommend {
-    margin-top: 26px;
+  .block_common {
+    margin-bottom: 20px;
 
     h2 {
       font-weight: bolder;
       color: #353535;
+
+      a {
+        color: #3e3e3e;
+
+        &:hover {
+          color: #111111;
+        }
+      }
     }
   }
 }

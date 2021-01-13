@@ -1,12 +1,13 @@
 <template>
   <div class="grid_common">
-    <template v-for="(item, index) in data">
+    <template v-for="(item, index) in data" v-if="index <5">
       <a class="grid_item">
         <img :src="item.picUrl + '?param=140y140'"/>
         <div class="grid_text_block">
           <p>{{ item.name }}</p>
         </div>
-        <p class="rcmd_text">{{item.rcmdText}}</p>
+        <p class="rcmd_text" v-if="item.rcmdText">{{ item.rcmdText }}</p>
+        <p class="rcmd_text" v-else>{{ item.rcmdtext }}</p>
       </a>
     </template>
   </div>
