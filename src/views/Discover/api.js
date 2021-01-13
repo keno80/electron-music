@@ -119,5 +119,27 @@ export default {
 				cateId
 			}
 		})
+	},
+
+	//电台详情
+	djDetail(rid) {
+		return axios({
+			url: `${baseUrl}/dj/detail`,
+			method: 'get',
+			params: {
+				rid
+			}
+		})
+	},
+
+	//电台节目
+	djPrograms(rid) {
+		return axios({
+			url: `${baseUrl}/dj/program`,
+			method: 'get',
+			params: {
+				rid
+			}
+		})
 	}
 }
