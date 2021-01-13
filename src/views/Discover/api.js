@@ -97,5 +97,16 @@ export default {
 			url: `${baseUrl}/dj/personalize/recommend?limit=5`,
 			method: 'get'
 		})
+	},
+
+	//电台分类推荐
+	djTypeRecommend(type) {
+		return axios({
+			url: `${baseUrl}/dj/recommend/type`,
+			method: 'get',
+			params: {
+				type
+			}
+		})
 	}
 }
