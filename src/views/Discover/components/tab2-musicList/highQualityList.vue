@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 774px">
     <a-page-header
       title="精品歌单"
       @back="toNormalList"
@@ -31,15 +31,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-/deep/ .ant-page-header {
-  padding: 10px 0 14px 0;
-
-  .ant-page-header-heading {
-    .ant-page-header-back {
-      .ant-page-header-back-button:hover {
-        color: #ec4141;
-      }
-    }
-  }
-}
+@import "src/style/public";
 </style>

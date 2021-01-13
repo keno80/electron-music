@@ -1,15 +1,15 @@
 <template>
   <div class="tab">
-    <a-tabs default-active-key="1" @change="callback">
+    <a-tabs :default-active-key="tabIndex" @change="callback">
       <a-tab-pane key="1" tab="个性推荐">
-        <tab1-recommend />
+        <tab1-recommend/>
       </a-tab-pane>
       <a-tab-pane key="2" tab="歌单">
         <high-quality-music-list v-if="normalOrHQ"/>
         <tab2-music-list v-else/>
       </a-tab-pane>
       <a-tab-pane key="3" tab="主播电台">
-        <tab3-d-j />
+        <tab3-d-j/>
       </a-tab-pane>
       <a-tab-pane key="4" tab="排行榜">
         Content of Tab Pane 3
@@ -38,12 +38,13 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'normalOrHQ'
+      'normalOrHQ',
+      'tabIndex'
     ])
   },
   methods: {
-    callback() {
-
+    callback(key) {
+      this.$store.dispatch('app/changeTabIndex', key)
     }
   }
 }

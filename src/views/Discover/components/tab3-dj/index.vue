@@ -4,7 +4,7 @@
 
     <div class="dj_category">
       <template v-for="(item, index) in djCategory">
-        <a class="dj_category_block">
+        <a class="dj_category_block" @click="toProgramsList(item.id)">
           <img :src="item.pic56x56Url"/>
           <p>{{ item.name }}</p>
         </a>
@@ -17,22 +17,42 @@
     </div>
 
     <div class="block_common">
-      <h2><a>创作翻唱 <a-icon type="right" /></a></h2>
+      <h2 @click="toProgramsList(2001)">
+        <a>
+          创作翻唱
+          <a-icon type="right"/>
+        </a>
+      </h2>
       <dj-common-grid :data="type2001"/>
     </div>
 
     <div class="block_common">
-      <h2><a>脱口秀 <a-icon type="right" /></a></h2>
+      <h2 @click="toProgramsList(8)">
+        <a>
+          脱口秀
+          <a-icon type="right"/>
+        </a>
+      </h2>
       <dj-common-grid :data="type8"/>
     </div>
 
     <div class="block_common">
-      <h2><a>音乐故事 <a-icon type="right" /></a></h2>
+      <h2 @click="toProgramsList(2)">
+        <a>
+          音乐故事
+          <a-icon type="right"/>
+        </a>
+      </h2>
       <dj-common-grid :data="type2"/>
     </div>
 
     <div class="block_common">
-      <h2><a>声音恋人 <a-icon type="right" /></a></h2>
+      <h2 @click="toProgramsList(3001)">
+        <a>
+          声音恋人
+          <a-icon type="right"/>
+        </a>
+      </h2>
       <dj-common-grid :data="type3001"/>
     </div>
   </div>
@@ -90,7 +110,6 @@ export default {
       api.djTypeRecommend(2001).then(res => {
         if (res.data.code === 200) {
           this.type2001 = res.data.djRadios
-          console.log(this.type2001);
         }
       })
 
@@ -112,6 +131,16 @@ export default {
       api.djTypeRecommend(3001).then(res => {
         if (res.data.code === 200) {
           this.type3001 = res.data.djRadios
+        }
+      })
+    },
+    toProgramsList(type) {
+      api.djTypeHot(type).then(res => {
+        if (res.data.code === 200) {
+          this.$store.dispatch('djProgram/saveRadioList', res.data.djRadios)
+          this.$router.push({
+            path: '/dj_programs_list'
+          })
         }
       })
     }
