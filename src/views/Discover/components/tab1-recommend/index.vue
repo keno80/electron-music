@@ -5,7 +5,7 @@
         <a-icon type="star" slot="indicator" style="font-size: 24px" :spin="true" />
       </a-spin>
     </div>
-    <carousel :banner="recommendBanner" type="'recommend'" v-else/>
+    <carousel :banner="recommendBanner" :type="'recommend'" v-else/>
 
     <div class="song_list_spin common_style" v-if="!songListReady">
       <a-spin tip="推荐歌单加载中...">

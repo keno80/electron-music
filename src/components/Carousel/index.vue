@@ -15,7 +15,10 @@ export default {
     banner: {
       type: Array
     },
-    type: String
+    type: {
+      type: String,
+      default: 'recommend'
+    }
   },
   computed: {
     imgList() {
