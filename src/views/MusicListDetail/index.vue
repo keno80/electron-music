@@ -1,17 +1,26 @@
 <template>
   <div class="music_list_content">
     <div class="music_list_detail_block">
-      <img :src="musicListDetail.coverImgUrl + '?param=184y184'">
+      <img :src="detail.coverImgUrl + '?param=184y184'" v-if="detailTag === '歌单'">
+      <img :src="detail.picUrl + '?param=184y184'" v-else>
       <div class="music_list_detail">
         <div class="title">
-          <a-tag color="red" style="vertical-align: text-bottom">歌单</a-tag>
-          <span class="music_list_name">{{ musicListDetail.name }}</span>
+          <a-tag color="red" style="vertical-align: text-bottom">{{ detailTag }}</a-tag>
+          <span class="music_list_name">{{ detail.name }}</span>
         </div>
         <div class="creator">
-          <a>
-            <img :src="musicListDetail.creator.avatarUrl + '?param=26y26'">
-            <span>{{ musicListDetail.creator.nickname }}</span>
-            <span class="createTime">{{ musicListDetail.createTime | formatDate }}</span>
+          <!--          歌单信息-->
+          <a v-if="detailTag === '歌单'">
+            <img :src="detail.creator.avatarUrl + '?param=26y26'">
+            <span>{{ detail.creator.nickname }}</span>
+            <span class="createTime">{{ detail.createTime | formatDate }}</span>
+          </a>
+
+          <!--          电台信息-->
+          <a v-else>
+            <img :src="detail.dj.avatarUrl + '?param=26y26'">
+            <span>{{ detail.dj.nickname }}</span>
+            <span class="createTime">{{ detail.createTime | formatDate }}</span>
           </a>
         </div>
         <div class="options">
@@ -25,40 +34,60 @@
             </a-button>
           </a-button-group>
           <a-button type="primary" shape="round">
-            <a-icon type="star"/>
-            收藏({{ musicListDetail.subscribedCount | countFormat }})
+            <!--          歌单为收藏、电台为订阅-->
+            <template v-if="detailTag === '歌单'">
+              <a-icon type="star"/>
+              收藏({{ detail.subscribedCount | countFormat }})
+            </template>
+            <template v-else>
+              <a-icon type="star"/>
+              订阅({{ detail.subCount | countFormat }})
+            </template>
           </a-button>
           <a-button type="primary" shape="round">
             <a-icon type="share-alt"/>
-            分享({{ musicListDetail.shareCount | countFormat }})
+            分享({{ detail.shareCount | countFormat }})
           </a-button>
-          <a-button type="primary" shape="round">
+          <a-button type="primary" shape="round" v-if="detailTag === '歌单'">
             <a-icon type="cloud-download"/>
             下载全部
           </a-button>
         </div>
         <div class="misc">
-          <p>标签：
-            <a-tag v-for="(item, index) in musicListDetail.tags" :key="index" color="red" style="margin-right: 6px">
-              {{ item }}
-            </a-tag>
-          </p>
-          <p>
-            <span style="margin-right: 16px">歌曲：{{ musicListDetail.trackCount }}</span>
-            <span>播放：{{ musicListDetail.playCount | countFormat }}</span>
-          </p>
-          <p class="default" :class="{description: ellipsis}">简介：{{ musicListDetail.description }}</p>
-          <a class="caret" @click="showEllipsis">
-            <a-icon type="caret-down" v-if="ellipsis"/>
-            <a-icon type="caret-up" v-else/>
-          </a>
+          <template v-if="detailTag === '歌单'">
+            <p>标签：
+              <a-tag v-for="(item, index) in detail.tags" :key="index" color="red" style="margin-right: 6px">
+                {{ item }}
+              </a-tag>
+            </p>
+            <p>
+              <span style="margin-right: 16px">歌曲：{{ detail.trackCount }}</span>
+              <span>播放：{{ detail.playCount | countFormat }}</span>
+            </p>
+            <p class="default" :class="{description: ellipsis}">简介：{{ detail.description }}</p>
+            <a class="caret" @click="showEllipsis">
+              <a-icon type="caret-down" v-if="ellipsis"/>
+              <a-icon type="caret-up" v-else/>
+            </a>
+          </template>
+          <template v-else>
+            <p>
+              <a-tag color="red" style="margin-right: 6px">
+                {{ detail.category }}
+              </a-tag>
+              {{detail.desc}}
+            </p>
+          </template>
         </div>
       </div>
     </div>
     <div class="music_list">
       <a-tabs :active-key="key" @change="keyCB">
         <a-tab-pane key="1" tab="歌曲列表">
-          <music-list-table :data="musicList" @rowDbClick="rowDbClick" v-if="musicList.length !== 0"/>
+          <template v-if="list.length !== 0">
+            <music-list-table :data="list" @rowDbClick="rowDbClick" v-if="detailTag === '歌单'"/>
+            <dj-programs-table v-else :data="list"/>
+          </template>
           <div class="spin" v-else>
             <a-spin tip="请稍后...">
               <a-icon slot="indicator" type="loading" style="font-size: 24px" spin/>
@@ -66,7 +95,7 @@
           </div>
 
         </a-tab-pane>
-        <a-tab-pane key="2" :tab="'评论(' + musicListDetail.commentCount + ')' ">
+        <a-tab-pane key="2" :tab="'评论(' + detail.commentCount + ')' ">
           <comments :hotComments="comments.hotComments" :normalComments="comments.normalComments"
                     :total="comments.total"/>
         </a-tab-pane>
@@ -88,6 +117,7 @@ import {mapGetters} from 'vuex'
 import lodash from "lodash";
 import dayjs from 'dayjs'
 import musicListTable from "@/views/MusicListDetail/component/musicListTable";
+import djProgramsTable from "@/views/Discover/components/tab3-dj/djProgramsTable";
 import Comments from '@/components/Comments'
 import UserGrid from '@/components/UserGrid'
 import global_api from "@/utils/global_api";
@@ -97,25 +127,35 @@ export default {
   name: "index",
   components: {
     musicListTable,
+    djProgramsTable,
     Comments,
     UserGrid
   },
   computed: {
     ...mapGetters([
-      'playList',
-      'nowPlayMusic',
-      'musicList',
-      'musicListDetail',
-      'musicListIds',
-      'playType'
-    ])
+      'playList',  //播放列表
+      'nowPlayMusic',  //正在播放的音乐
+      'musicList',  //歌单包含的音乐
+      'musicListDetail',  //歌单详情
+      'musicListIds',  //歌单的id
+      'playType',  //播放模式
+      'detailTag',  //详情页tag
+      'programList',  //电台节目列表
+      'programDetail'  //电台详情
+    ]),
+    detail() {
+      return this.detailTag === '歌单' ? this.musicListDetail : this.programDetail
+    },
+    list() {
+      return this.detailTag === '歌单' ? this.musicList : this.programList
+    }
   },
   filters: {
     formatDate(val) {
       return dayjs(val).format('YYYY-MM-DD') + '创建'
     },
     countFormat(val) {
-      return val / 10000 > 1 ? lodash.floor(val / 10000, 0) + '万' : val
+      return val / 10000 > 10 ? lodash.floor(val / 10000, 0) + '万' : val
     }
   },
   data() {
