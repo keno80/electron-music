@@ -141,5 +141,16 @@ export default {
 				rid
 			}
 		})
+	},
+
+	//电台订阅者列表
+	djSubscriber(id) {
+		return axios({
+			url: `${baseUrl}/dj/subscriber`,
+			method: 'get',
+			params: {
+				id
+			}
+		})
 	}
 }
