@@ -75,7 +75,7 @@
               <a-tag color="red" style="margin-right: 6px">
                 {{ detail.category }}
               </a-tag>
-              {{detail.desc}}
+              {{ detail.desc }}
             </p>
           </template>
         </div>
@@ -83,7 +83,7 @@
     </div>
     <div class="music_list">
       <a-tabs :active-key="key" @change="keyCB">
-        <a-tab-pane key="1" tab="歌曲列表">
+        <a-tab-pane key="1" :tab="firstTag">
           <template v-if="list.length !== 0">
             <music-list-table :data="list" @rowDbClick="rowDbClick" v-if="detailTag === '歌单'"/>
             <dj-programs-table v-else :data="list"/>
@@ -95,14 +95,14 @@
           </div>
 
         </a-tab-pane>
-        <a-tab-pane key="2" :tab="'评论(' + detail.commentCount + ')' ">
+        <a-tab-pane key="2" :tab="'评论(' + detail.commentCount + ')' " v-if="detailTag === '歌单'">
           <comments :hotComments="comments.hotComments" :normalComments="comments.normalComments"
                     :total="comments.total"/>
         </a-tab-pane>
-        <a-tab-pane key="3" tab="收藏者">
+        <a-tab-pane key="3" :tab="thirdTag">
           <user-grid :data="subscribers"/>
         </a-tab-pane>
-        <a-input slot="tabBarExtraContent" v-if="key === '1'" size="small" placeholder="搜索歌单音乐">
+        <a-input slot="tabBarExtraContent" v-if="key === '1' && detailTag === '歌单'" size="small" placeholder="搜索歌单音乐">
           <a-tooltip slot="suffix" title="Extra information">
             <a-icon type="search" style="color: rgba(0,0,0,.45)"/>
           </a-tooltip>
@@ -121,6 +121,7 @@ import djProgramsTable from "@/views/Discover/components/tab3-dj/djProgramsTable
 import Comments from '@/components/Comments'
 import UserGrid from '@/components/UserGrid'
 import global_api from "@/utils/global_api";
+import api from '@/views/Discover/api'
 import {concatPlayListAndMusicList} from "@/utils/playerFn";
 
 export default {
@@ -144,10 +145,18 @@ export default {
       'programDetail'  //电台详情
     ]),
     detail() {
+      console.log(this.programDetail);
       return this.detailTag === '歌单' ? this.musicListDetail : this.programDetail
     },
     list() {
       return this.detailTag === '歌单' ? this.musicList : this.programList
+    },
+    firstTag() {
+      return this.detailTag === '歌单' ? '歌曲列表' : '节目(' + this.programDetail.programCount + ')'
+    },
+    thirdTag() {
+      let sub = this.programDetail.subCount / 10000 > 10 ? lodash.floor(this.programDetail.subCount / 10000, 0) + '万' : this.programDetail.subCount
+      return this.detailTag === '歌单' ? '收藏者' : '订阅者(' + sub + ')'
     }
   },
   filters: {
@@ -250,8 +259,14 @@ export default {
         })
       }
 
-      if (key === '3') {
+      if (key === '3' && this.detailTag === '歌单') {
         global_api.getMusicListSubscriber(this.musicListDetail.id).then(res => {
+          if (res.data.code === 200) {
+            this.subscribers = res.data.subscribers
+          }
+        })
+      } else {
+        api.djSubscriber(this.programDetail.id).then(res => {
           if (res.data.code === 200) {
             this.subscribers = res.data.subscribers
           }
