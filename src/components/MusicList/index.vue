@@ -44,7 +44,7 @@ export default {
           this.$store.dispatch('musicList/saveMusicListDetail', res.data.playlist)
           this.$store.dispatch('musicList/saveMusicListSongs', [])
           this.$store.dispatch('app/changeTag', '歌单')
-          this.$router.push('/music_list/music_List')
+          this.$router.push('/music_list')
 
           let arr = []
           for (let item of res.data.playlist.trackIds) {
