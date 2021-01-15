@@ -12,7 +12,7 @@
         <tab3-d-j/>
       </a-tab-pane>
       <a-tab-pane key="4" tab="排行榜">
-        Content of Tab Pane 3
+        <tab4-top-list/>
       </a-tab-pane>
       <a-tab-pane key="5" tab="歌手">
         Content of Tab Pane 3
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import {Tab1Recommend, Tab2MusicList, Tab3DJ, HighQualityMusicList} from "@/views/Discover/components";
+import {Tab1Recommend, Tab2MusicList, Tab3DJ, Tab4TopList, HighQualityMusicList} from "@/views/Discover/components";
 import {mapGetters} from 'vuex'
 
 export default {
@@ -34,6 +34,7 @@ export default {
     Tab1Recommend,
     Tab2MusicList,
     Tab3DJ,
+    Tab4TopList,
     HighQualityMusicList
   },
   computed: {
