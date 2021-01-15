@@ -183,15 +183,26 @@ export default {
     playAll() {
       this.$store.dispatch('playerWidget/cleanPlayList')
       this.$store.dispatch('musicList/cleanPlayListState')
-
     },
     addOrPlay(type) {
       //如果是添加到播放列表，先判断当前播放列表是否为空
       if (type === 'add') {
-        //如果为空，直接将歌单音乐添加到播放列表
+        //如果为空，继续判断当前是歌单还是电台
         if (this.playList.length === 0) {
-          this.$store.dispatch('playerWidget/addMultiToPlayListMusic', this.musicList)
-          this.$store.dispatch('musicList/saveMusicListIds', this.musicListDetail.id)
+          let list = []
+          let id = null
+          switch (this.detailTag) {
+            case "歌单":
+              list = this.musicList
+              id = this.musicListDetail.id
+              break
+            case "电台":
+              list = this.programList
+              id = this.programDetail.id
+              break
+          }
+          this.$store.dispatch('playerWidget/addMultiToPlayListMusic', list)
+          this.$store.dispatch('musicList/saveMusicListIds', id)
           this.emptyListFunction()
         } else {
           //如果播放列表不为空，则先判断当前歌单的id是否存在于存储的id中，存在则不进行操作
