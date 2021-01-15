@@ -152,5 +152,13 @@ export default {
 				id
 			}
 		})
+	},
+
+	//所有榜单
+	allTopList() {
+		return axios({
+			url: `${baseUrl}/toplist`,
+			method: 'get'
+		})
 	}
 }
