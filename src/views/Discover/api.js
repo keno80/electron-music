@@ -167,5 +167,18 @@ export default {
 			url: `${baseUrl}/toplist/detail`,
 			method: 'get'
 		})
+	},
+
+	//歌手分类列表
+	artistsList(type, area, initial) {
+		return axios({
+			url: `${baseUrl}/artist/list`,
+			method: 'get',
+			params: {
+				type,
+				area,
+				initial
+			}
+		})
 	}
 }
