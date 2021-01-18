@@ -160,5 +160,12 @@ export default {
 			url: `${baseUrl}/toplist`,
 			method: 'get'
 		})
+	},
+
+	topListDesc() {
+		return axios({
+			url: `${baseUrl}/toplist/detail`,
+			method: 'get'
+		})
 	}
 }
