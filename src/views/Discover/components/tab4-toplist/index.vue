@@ -4,17 +4,19 @@
     <div class="top_list_content">
       <template v-for="(item, index) in topList" v-if="item.ToplistType">
         <div class="top_list_item">
-          <img :src="item.coverImgUrl + '?param=159y159'"/>
-          <p class="update_time">{{ item.updateTime | formatDate }}</p>
+          <a @click="showPlayList(item.id)">
+            <img :src="item.coverImgUrl + '?param=159y159'"/>
+            <p class="update_time">{{ item.updateTime | formatDate }}</p>
+            <a-icon type="caret-right" class="play_common"/>
+          </a>
           <top-list-table :data="item.tracks"/>
-          <a-icon type="caret-right" class="play_common"/>
         </div>
       </template>
     </div>
     <h2>全部榜单</h2>
     <div class="top_list_other">
       <template v-for="(item, index) in topList" v-if="index > 3">
-        <div class="other_list_box">
+        <a class="other_list_box" @click="showPlayList(item.id)">
           <img :src="item.coverImgUrl + '?param=140y140'"/>
           <p>{{ item.name }}</p>
           <p class="play_count">
@@ -22,7 +24,7 @@
             {{ item.playCount | countFormat }}
           </p>
           <a-icon type="caret-right" class="play_common"/>
-        </div>
+        </a>
       </template>
     </div>
   </div>
@@ -33,6 +35,7 @@ import api from '@/views/Discover/api'
 import dayjs from "dayjs";
 import lodash from "lodash";
 import topListTable from "@/views/Discover/components/tab4-toplist/topListTable";
+import global_api from "@/utils/global_api";
 
 export default {
   name: "index",
@@ -62,7 +65,27 @@ export default {
           this.topList = res.data.list
         }
       })
-    }
+    },
+    showPlayList(id) {
+      global_api.getMusicListDetail(id).then(res => {
+        if (res.data.code === 200) {
+          this.$store.dispatch('musicList/saveMusicListDetail', res.data.playlist)
+          this.$store.dispatch('musicList/saveMusicListSongs', [])
+          this.$store.dispatch('app/changeTag', '歌单')
+          this.$router.push('/music_list')
+
+          let arr = []
+          for (let item of res.data.playlist.trackIds) {
+            arr.push(item.id)
+          }
+          global_api.getMusicDetail(arr.join(',')).then(res => {
+            if (res.data.code === 200) {
+              this.$store.dispatch('musicList/saveMusicListSongs', res.data.songs)
+            }
+          })
+        }
+      })
+    },
   }
 }
 </script>
