@@ -270,18 +270,20 @@ export default {
         })
       }
 
-      if (key === '3' && this.detailTag === '歌单') {
-        global_api.getMusicListSubscriber(this.musicListDetail.id).then(res => {
-          if (res.data.code === 200) {
-            this.subscribers = res.data.subscribers
-          }
-        })
-      } else {
-        api.djSubscriber(this.programDetail.id).then(res => {
-          if (res.data.code === 200) {
-            this.subscribers = res.data.subscribers
-          }
-        })
+      if (key === '3') {
+        if (this.detailTag === '歌单') {
+          global_api.getMusicListSubscriber(this.musicListDetail.id).then(res => {
+            if (res.data.code === 200) {
+              this.subscribers = res.data.subscribers
+            }
+          })
+        } else {
+          api.djSubscriber(this.programDetail.id).then(res => {
+            if (res.data.code === 200) {
+              this.subscribers = res.data.subscribers
+            }
+          })
+        }
       }
     }
   }
