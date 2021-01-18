@@ -33,7 +33,12 @@ const getters = {
 	//电台
 	djRadiosList: state => state.djProgram.radiosList,
 	programList: state => state.djProgram.programList,
-	programDetail: state => state.djProgram.programDetail
+	programDetail: state => state.djProgram.programDetail,
+
+	//歌手列表
+	selectedType: state => state.artistsList.selectedType,
+	selectedArea: state => state.artistsList.selectedArea,
+	selectedLetter: state => state.artistsList.selectedLetter
 }
 
 export default getters
