@@ -1,18 +1,21 @@
 <template>
   <div class="artist_content">
     <artis-picker :area="area" :type="type" :letter="letter"/>
+    <artists-grid :list="artistList"/>
   </div>
 </template>
 
 <script>
 import ArtisPicker from "@/views/Discover/components/tab5-artist/ArtisPicker";
+import ArtistsGrid from "@/views/Discover/components/tab5-artist/ArtistsGrid";
 import api from "@/views/Discover/api";
 import {mapGetters} from 'vuex'
 
 export default {
   name: "index",
   components: {
-    ArtisPicker
+    ArtisPicker,
+    ArtistsGrid
   },
   computed: {
     ...mapGetters([
@@ -39,6 +42,17 @@ export default {
       return arr
     }
   },
+  watch: {
+    '$store.state.artistsList.selectedType': function () {
+      this.fetchData()
+    },
+    '$store.state.artistsList.selectedArea': function () {
+      this.fetchData()
+    },
+    '$store.state.artistsList.selectedLetter': function () {
+      this.fetchData()
+    }
+  },
   data() {
     return {
       area: [
@@ -55,6 +69,7 @@ export default {
         {value: 2, label: '女歌手'},
         {value: 3, label: '乐队'}
       ],
+      artistList: []
     }
   },
   created() {
@@ -63,7 +78,9 @@ export default {
   methods: {
     fetchData() {
       api.artistsList(this.selectedType, this.selectedArea, this.selectedLetter).then(res => {
-        console.log(res);
+        if (res.data.code === 200) {
+          this.artistList = res.data.artists
+        }
       })
     }
   }
