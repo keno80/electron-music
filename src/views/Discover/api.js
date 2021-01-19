@@ -180,5 +180,49 @@ export default {
 				initial
 			}
 		})
+	},
+
+	//歌手详情
+	artistDetail(id) {
+		return axios({
+			url: `${baseUrl}/artist/detail`,
+			method: 'get',
+			params: {
+				id
+			}
+		})
+	},
+
+	//歌手描述
+	artistDesc(id) {
+		return axios({
+			url: `${baseUrl}/artist/desc`,
+			method: 'get',
+			params: {
+				id
+			}
+		})
+	},
+
+	//歌手专辑
+	artistAlbum(id) {
+		return axios({
+			url: `${baseUrl}/artist/album`,
+			method: 'get',
+			params: {
+				id
+			}
+		})
+	},
+
+	//歌手热门50首歌曲
+	artistHotSong(id) {
+		return axios({
+			url: `${baseUrl}/artist/top/song`,
+			method: 'get',
+			params: {
+				id
+			}
+		})
 	}
 }
