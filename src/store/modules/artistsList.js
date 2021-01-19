@@ -1,5 +1,3 @@
-import ar from "element-ui/src/locale/lang/ar";
-
 const state = {
 	selectedType: -1,
 	selectedArea: -1,
