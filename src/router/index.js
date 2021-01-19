@@ -38,6 +38,13 @@ const routes = [
 				hidden: true
 			},
 			{
+				path: 'artist_detail',
+				name: 'artist_detail',
+				component: () => import('@/views/ArtistDetail/index'),
+				meta: {title: '歌手详情'},
+				hidden: true
+			},
+			{
 				path: 'dj_programs_list',
 				name: 'dj_programs_list',
 				component: () => import('@/views/Discover/components/tab3-dj/djProgramsList'),
