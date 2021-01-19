@@ -38,7 +38,8 @@ const getters = {
 	//歌手列表
 	selectedType: state => state.artistsList.selectedType,
 	selectedArea: state => state.artistsList.selectedArea,
-	selectedLetter: state => state.artistsList.selectedLetter
+	selectedLetter: state => state.artistsList.selectedLetter,
+	artistId: state => state.artistsList.artistId
 }
 
 export default getters

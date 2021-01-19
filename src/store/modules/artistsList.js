@@ -1,7 +1,8 @@
 const state = {
 	selectedType: -1,
 	selectedArea: -1,
-	selectedLetter: -1
+	selectedLetter: -1,
+	artistId: ''
 }
 
 const mutations = {
@@ -13,6 +14,9 @@ const mutations = {
 	},
 	CHANGE_LETTER: (state, letter) => {
 		state.selectedLetter = letter
+	},
+	SAVE_ARTIST_ID: (state, id) => {
+		state.artistId = id
 	}
 }
 
@@ -25,6 +29,9 @@ const actions = {
 	},
 	changeLetter({commit}, letter) {
 		commit('CHANGE_LETTER', letter)
+	},
+	saveArtistId({commit}, id) {
+		commit('SAVE_ARTIST_ID', id)
 	}
 }
 
