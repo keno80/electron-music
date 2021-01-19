@@ -1,8 +1,8 @@
 <template>
   <div class="artists_list_grid">
     <div class="artists_grid_item" v-for="(item, index) in list" :key="index">
-      <a><img :src="item.img1v1Url + '?param=139y139'"/></a>
-      <p><a>{{item.name}}</a></p>
+      <a @click="toArtistDetail(item.id)"><img :src="item.img1v1Url + '?param=139y139'"/></a>
+      <p @click="toArtistDetail(item.id)"><a>{{item.name}}</a></p>
       <a>
         <a-icon type="user" class="user_account" v-if="item.accountId"/>
       </a>
@@ -15,6 +15,11 @@ export default {
   name: "ArtistsGrid",
   props: {
     list: Array
+  },
+  methods: {
+    toArtistDetail(id) {
+      this.$emit('toArtistDetail', id)
+    }
   }
 }
 </script>

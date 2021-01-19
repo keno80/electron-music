@@ -1,7 +1,7 @@
 <template>
   <div class="artist_content">
     <artis-picker :area="area" :type="type" :letter="letter"/>
-    <artists-grid :list="artistList"/>
+    <artists-grid :list="artistList" @toArtistDetail="toArtistDetail"/>
   </div>
 </template>
 
@@ -82,6 +82,10 @@ export default {
           this.artistList = res.data.artists
         }
       })
+    },
+    toArtistDetail(id) {
+      this.$store.dispatch('artistsList/saveArtistId', id)
+      this.$router.push('/artist_detail')
     }
   }
 }
