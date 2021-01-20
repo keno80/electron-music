@@ -292,4 +292,5 @@ export default {
 
 <style scoped lang="scss">
 @import "src/style/musicListDeatil";
+@import "src/style/public";
 </style>
