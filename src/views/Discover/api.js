@@ -210,7 +210,8 @@ export default {
 			url: `${baseUrl}/artist/album`,
 			method: 'get',
 			params: {
-				id
+				id,
+				limit: 200
 			}
 		})
 	},
