@@ -4,11 +4,11 @@
       <img src="../../../public/img/hot50.png"/>
       <div class="hot_song_table">
         <span class="ti_text">热门50首</span>
-        <a-icon type="play-circle" class="ti_icon"/>
+        <a-icon type="play-circle" class="ti_icon" @click="playAll"/>
         <a-icon type="folder-add" class="ti_icon"/>
         <div class="table">
           <div class="table_item" v-for="(item, index) in hotSong" :class="[index%2 !== 1 ? 'item_style': '']"
-               v-if="index <= showAll">
+               v-if="index <= showAll" @click="play(item.id)">
             <span class="common_style" style="width: 40px;text-align: center">{{ index + 1 }}</span>
             <a-icon type="heart" class="common_style" style="padding-right: 10px"/>
             <a-icon type="cloud-download" class="common_style" style="padding-right: 10px"/>
@@ -25,8 +25,8 @@
     <div class="album">
       <div class="album_item" v-for="(item, index) in artistAlbum">
         <img :src="item.picUrl + '?param=159y159'">
-        <p>{{item.name}}</p>
-        <span>{{item.publishTime | formatDate}}</span>
+        <p>{{ item.name }}</p>
+        <span>{{ item.publishTime | formatDate }}</span>
       </div>
     </div>
   </div>
@@ -34,6 +34,7 @@
 
 <script>
 import {numberToTime} from "@/utils/playerFn";
+import {mapGetters} from 'vuex'
 import dayjs from "dayjs";
 
 export default {
@@ -41,6 +42,12 @@ export default {
   props: {
     artistAlbum: Array,
     hotSong: Array
+  },
+  computed: {
+    ...mapGetters([
+      'playType',
+      'playList'
+    ])
   },
   data() {
     return {
@@ -58,6 +65,21 @@ export default {
   methods: {
     showMore() {
       this.showAll === 9 ? this.showAll = 50 : this.showAll = 9
+    },
+    playAll() {
+      this.$store.dispatch('playerWidget/addMultiToPlayListMusic', this.hotSong)
+      //添加到播放列表以后，判断当前的播放模式来自动播放音乐，随机模式与其他模式处理不相同
+      let playIndex = null
+      if (this.playType === 3) {
+        playIndex = Math.floor(Math.random() * this.playList.length)
+      } else {
+        playIndex = 0
+      }
+      this.$store.dispatch('playerWidget/nowPlayMusicId', this.playList[playIndex].id)
+    },
+    play(id) {
+      this.$store.dispatch('playerWidget/addMultiToPlayListMusic', this.hotSong)
+      this.$store.dispatch('playerWidget/nowPlayMusicId', id)
     }
   }
 }
@@ -91,7 +113,7 @@ export default {
       }
 
       .table {
-        margin: 10px 0;
+        margin: 10px 0 40px 0;
 
         .table_item {
           display: flex;
@@ -100,6 +122,10 @@ export default {
 
           .common_style {
             color: #c8c8c8;
+          }
+
+          &:hover {
+            background-color: #f1f1f1;
           }
         }
 
